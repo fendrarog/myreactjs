@@ -1,9 +1,16 @@
-.active {
+.dialog a.activeLink {
   color: gold;
 }
 
-.dialog {
+.dialog a {
   padding: 5px;
   text-decoration: none;
+  color: white;
 }
 
+.dialog img {
+  height: 50px;
+  width: 50px;
+  border-radius: 25px;
+  margin-right: 10px;
+}

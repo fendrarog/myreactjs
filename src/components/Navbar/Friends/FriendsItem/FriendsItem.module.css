@@ -1,0 +1,13 @@
+ .friendsItem img {
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+  }
+
+  .friendsItem {
+    padding: 5px;
+  }
+
+  .friendsItem a.activeLink {
+    color: gold;
+  }

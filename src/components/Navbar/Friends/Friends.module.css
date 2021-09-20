@@ -1,0 +1,18 @@
+ .friendsWrapper {
+   margin-top: 30px;
+ }
+
+ .friendsMenuBtn {
+   font-size: 32px;
+   font-weight: 300;
+ }
+ 
+ .friendsWrapper a.activeLink {
+    color: gold;
+  }
+
+  .friends {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  
