@@ -1,3 +1,7 @@
+let rerenderEntireTree = () => {
+  console.log("state changed");
+};
+
 let state = {
   profilePage: {
     postsData: [
@@ -6,6 +10,7 @@ let state = {
       { id: 3, message: "GG WP", likesCount: 3 },
       { id: 4, message: "Ez katka", likesCount: 7 },
     ],
+    newPostText: "shadowbolt",
   },
   messagesPage: {
     messagesData: [
@@ -15,6 +20,9 @@ let state = {
       { id: 4, message: "Yo!" },
       { id: 5, message: "Yo!" },
       { id: 6, message: "Yo!" },
+      { id: 7, message: "Yo!" },
+      { id: 8, message: "Yo!" },
+      { id: 9, message: "Yo!" },
     ],
     dialogsData: [
       { id: 1, name: "Pashtet" },
@@ -24,6 +32,7 @@ let state = {
       { id: 5, name: "Durik" },
       { id: 6, name: "Borovik" },
     ],
+    newMessageText: "tolstozhopiy",
   },
   sitebar: {
     friendsData: [
@@ -32,6 +41,43 @@ let state = {
       { id: 3, name: "Duriman" },
     ],
   },
+};
+
+window.state = state;
+
+export const addPost = () => {
+  let newPost = {
+    id: 5,
+    message: state.profilePage.newPostText,
+    likesCount: 0,
+  };
+  state.profilePage.postsData.push(newPost);
+  state.profilePage.newPostText = "";
+  rerenderEntireTree(state);
+};
+
+export const updateNewPostText = (newText) => {
+  state.profilePage.newPostText = newText;
+  rerenderEntireTree(state);
+};
+
+export const addMessage = () => {
+  let newMessage = {
+    id: 10,
+    message: state.messagesPage.newMessageText,
+  };
+  state.messagesPage.messagesData.push(newMessage);
+  state.messagesPage.newMessageText = "";
+  rerenderEntireTree(state);
+};
+
+export const updateNewMessageText = (newText) => {
+  state.messagesPage.newMessageText = newText;
+  rerenderEntireTree(state);
+};
+
+export const subscribe = (observer) => {
+  rerenderEntireTree = observer;
 };
 
 export default state;

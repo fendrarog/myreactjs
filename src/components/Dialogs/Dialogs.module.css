@@ -1,12 +1,24 @@
 .dialogs {
   display: grid;
+
+  grid-template-areas:
+    "d m"
+    "d a";
+
+  grid-template-rows: 1fr auto;
   grid-template-columns: 2fr 10fr;
 }
 
 .dialogsItems {
   padding: 10px;
+  grid-area: d;
 }
 
 .messages {
   padding: 10px;
+  grid-area: m;
+}
+
+.addMessageArea {
+  grid-area: a;
 }
