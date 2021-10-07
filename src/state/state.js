@@ -1,83 +1,84 @@
-let rerenderEntireTree = () => {
-  console.log("state changed");
-};
-
-let state = {
-  profilePage: {
-    postsData: [
-      { id: 1, message: "Hi, how are you?", likesCount: 12 },
-      { id: 2, message: "It's my first post", likesCount: 9 },
-      { id: 3, message: "GG WP", likesCount: 3 },
-      { id: 4, message: "Ez katka", likesCount: 7 },
-    ],
-    newPostText: "shadowbolt",
+let store = {
+  _state: {
+    profilePage: {
+      postsData: [
+        { id: 1, message: "Hi, how are you?", likesCount: 12 },
+        { id: 2, message: "It's my first post", likesCount: 9 },
+        { id: 3, message: "GG WP", likesCount: 3 },
+        { id: 4, message: "Ez katka", likesCount: 7 },
+      ],
+      newPostText: "shadowbolt",
+    },
+    messagesPage: {
+      messagesData: [
+        { id: 1, message: "Hi" },
+        { id: 2, message: "How is your business?" },
+        { id: 3, message: "Yo!" },
+        { id: 4, message: "Yo!" },
+        { id: 5, message: "Yo!" },
+        { id: 6, message: "Yo!" },
+        { id: 7, message: "Yo!" },
+        { id: 8, message: "Yo!" },
+        { id: 9, message: "Yo!" },
+      ],
+      dialogsData: [
+        { id: 1, name: "Pashtet" },
+        { id: 2, name: "Iana" },
+        { id: 3, name: "Dasha" },
+        { id: 4, name: "Masha" },
+        { id: 5, name: "Durik" },
+        { id: 6, name: "Borovik" },
+      ],
+      newMessageText: "tolstozhopiy",
+    },
+    sitebar: {
+      friendsData: [
+        { id: 1, name: "Iana" },
+        { id: 2, name: "Pavlik" },
+        { id: 3, name: "Duriman" },
+      ],
+    },
   },
-  messagesPage: {
-    messagesData: [
-      { id: 1, message: "Hi" },
-      { id: 2, message: "How is your business?" },
-      { id: 3, message: "Yo!" },
-      { id: 4, message: "Yo!" },
-      { id: 5, message: "Yo!" },
-      { id: 6, message: "Yo!" },
-      { id: 7, message: "Yo!" },
-      { id: 8, message: "Yo!" },
-      { id: 9, message: "Yo!" },
-    ],
-    dialogsData: [
-      { id: 1, name: "Pashtet" },
-      { id: 2, name: "Iana" },
-      { id: 3, name: "Dasha" },
-      { id: 4, name: "Masha" },
-      { id: 5, name: "Durik" },
-      { id: 6, name: "Borovik" },
-    ],
-    newMessageText: "tolstozhopiy",
+  _callSubscriber() {
+    console.log("state changed");
   },
-  sitebar: {
-    friendsData: [
-      { id: 1, name: "Iana" },
-      { id: 2, name: "Pavlik" },
-      { id: 3, name: "Duriman" },
-    ],
+
+  getState() {
+    return this._state;
+  },
+  subscribe(observer) {
+    this._callSubscriber = observer;
+  },
+
+  addPost() {
+    let newPost = {
+      id: 5,
+      message: this._state.profilePage.newPostText,
+      likesCount: 0,
+    };
+    this._state.profilePage.postsData.push(newPost);
+    this._state.profilePage.newPostText = "";
+    this._callSubscriber(this._state);
+  },
+  updateNewPostText(newText) {
+    this._state.profilePage.newPostText = newText;
+    this._callSubscriber(this._state);
+  },
+  addMessage() {
+    let newMessage = {
+      id: 10,
+      message: this._state.messagesPage.newMessageText,
+    };
+    this._state.messagesPage.messagesData.push(newMessage);
+    this._state.messagesPage.newMessageText = "";
+    this._callSubscriber(this._state);
+  },
+  updateNewMessageText(newText) {
+    this._state.messagesPage.newMessageText = newText;
+    this._callSubscriber(this._state);
   },
 };
 
-window.state = state;
+export default store;
 
-export const addPost = () => {
-  let newPost = {
-    id: 5,
-    message: state.profilePage.newPostText,
-    likesCount: 0,
-  };
-  state.profilePage.postsData.push(newPost);
-  state.profilePage.newPostText = "";
-  rerenderEntireTree(state);
-};
-
-export const updateNewPostText = (newText) => {
-  state.profilePage.newPostText = newText;
-  rerenderEntireTree(state);
-};
-
-export const addMessage = () => {
-  let newMessage = {
-    id: 10,
-    message: state.messagesPage.newMessageText,
-  };
-  state.messagesPage.messagesData.push(newMessage);
-  state.messagesPage.newMessageText = "";
-  rerenderEntireTree(state);
-};
-
-export const updateNewMessageText = (newText) => {
-  state.messagesPage.newMessageText = newText;
-  rerenderEntireTree(state);
-};
-
-export const subscribe = (observer) => {
-  rerenderEntireTree = observer;
-};
-
-export default state;
+window.store = store;
