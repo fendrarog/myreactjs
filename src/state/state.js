@@ -50,35 +50,38 @@ let store = {
     this._callSubscriber = observer;
   },
 
-  addPost() {
-    let newPost = {
-      id: 5,
-      message: this._state.profilePage.newPostText,
-      likesCount: 0,
-    };
-    this._state.profilePage.postsData.push(newPost);
-    this._state.profilePage.newPostText = "";
-    this._callSubscriber(this._state);
-  },
-  updateNewPostText(newText) {
-    this._state.profilePage.newPostText = newText;
-    this._callSubscriber(this._state);
-  },
-  addMessage() {
-    let newMessage = {
-      id: 10,
-      message: this._state.messagesPage.newMessageText,
-    };
-    this._state.messagesPage.messagesData.push(newMessage);
-    this._state.messagesPage.newMessageText = "";
-    this._callSubscriber(this._state);
-  },
-  updateNewMessageText(newText) {
-    this._state.messagesPage.newMessageText = newText;
-    this._callSubscriber(this._state);
+  dispatch(action) {
+    if (action.type === "ADD_POST") {
+      let newPost = {
+        id: 5,
+        message: this._state.profilePage.newPostText,
+        likesCount: 0,
+      };
+      this._state.profilePage.postsData.push(newPost);
+      this._state.profilePage.newPostText = "";
+      this._callSubscriber(this._state);
+    } else if (action.type === "UPDATE_NEW_POST_TEXT") {
+      this._state.profilePage.newPostText = action.newText;
+      this._callSubscriber(this._state);
+    } else if (action.type === "ADD_MESSAGE") {
+      let newMessage = {
+        id: 10,
+        message: this._state.messagesPage.newMessageText,
+      };
+      this._state.messagesPage.messagesData.push(newMessage);
+      this._state.messagesPage.newMessageText = "";
+      this._callSubscriber(this._state);
+    } else if (action.type === "UPDATE_NEW_MESSAGE_TEXT") {
+      this._state.messagesPage.newMessageText = action.newText;
+      this._callSubscriber(this._state);
+    }
   },
 };
 
-export default store;
 
+
+
+
+
+export default store;
 window.store = store;
