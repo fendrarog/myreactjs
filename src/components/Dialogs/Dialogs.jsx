@@ -2,6 +2,7 @@ import s from "./Dialogs.module.css";
 import Message from "./Message/Message";
 import DialogItem from "./DialogItem/DialogItem";
 import React from "react";
+import { addMessageActionCreator, updateNewMessageTextActionCreator } from "../../state/messages-reducer";
 
 const Dialogs = (props) => {
   let dialogsElements = props.state.dialogsData.map((d) => (
@@ -14,12 +15,12 @@ const Dialogs = (props) => {
   let newMessageElement = React.createRef();
 
   let addMessage = () => {
-    props.dispatch({ type: "ADD-MESSAGE" });
+    props.dispatch(addMessageActionCreator());
   };
 
-  let onPostChange = () => {
-    let text = newMessageElement.current.value;
-    props.dispatch({ type: "UPDATE-NEW-MESSAGE-TEXT", newText: text });
+  let onPostChange = (event) => {
+    let text = event.target.value;
+    props.dispatch(updateNewMessageTextActionCreator(text));
   };
 
   return (

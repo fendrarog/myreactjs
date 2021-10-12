@@ -1,3 +1,8 @@
+import messagesReducer from "./messages-reducer";
+import profileReducer from "./profile-reducer";
+import sidebarReducer from "./sidebar-reducer";
+
+
 let store = {
   _state: {
     profilePage: {
@@ -31,7 +36,7 @@ let store = {
       ],
       newMessageText: "tolstozhopiy",
     },
-    sitebar: {
+    sidebar: {
       friendsData: [
         { id: 1, name: "Iana" },
         { id: 2, name: "Pavlik" },
@@ -51,36 +56,14 @@ let store = {
   },
 
   dispatch(action) {
-    if (action.type === "ADD-POST") {
-      let newPost = {
-        id: 5,
-        message: this._state.profilePage.newPostText,
-        likesCount: 0,
-      };
-      this._state.profilePage.postsData.push(newPost);
-      this._state.profilePage.newPostText = "";
-      this._callSubscriber(this._state);
-    } else if (action.type === "UPDATE-NEW-POST-TEXT") {
-      this._state.profilePage.newPostText = action.newText;
-      this._callSubscriber(this._state);
-    } else if (action.type === "ADD-MESSAGE") {
-      let newMessage = {
-        id: 10,
-        message: this._state.messagesPage.newMessageText,
-      };
-      this._state.messagesPage.messagesData.push(newMessage);
-      this._state.messagesPage.newMessageText = "";
-      this._callSubscriber(this._state);
-    } else if (action.type === "UPDATE-NEW-MESSAGE-TEXT") {
-      this._state.messagesPage.newMessageText = action.newText;
-      this._callSubscriber(this._state);
-    }
+
+    profileReducer(this._state.profilePage, action);
+    messagesReducer(this._state.messagesPage, action);
+    sidebarReducer(this._state.sidebar, action);
+
+    this._callSubscriber(this._state);
   },
 };
-
-
-
-
 
 
 export default store;
