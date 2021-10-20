@@ -1,6 +1,6 @@
 import { Route } from "react-router";
 import "./App.css"; //ALT+SHIFT+strelka vniz
-import Dialogs from "./components/Dialogs/Dialogs";
+import DialogsContainer from "./components/Dialogs/DialogsContainer";
 import Header from "./components/Header/Header";
 import Music from "./components/Music/Music";
 import Navbar from "./components/Navbar/Navbar";
@@ -12,26 +12,10 @@ function App(props) {
   return (
     <div className="app-wrapper">
       <Header />
-      <Navbar state={props.state.sidebar} />
+      <Navbar store={props.store} />
       <div className="app-wrapper-content">
-        <Route
-          path="/profile"
-          render={() => (
-            <Profile
-              state={props.state.profilePage}
-              dispatch={props.dispatch}
-            />
-          )}
-        />
-        <Route
-          path="/dialogs"
-          render={() => (
-            <Dialogs
-              state={props.state.messagesPage}
-              dispatch={props.dispatch}
-            />
-          )}
-        />
+        <Route path="/profile" render={() => <Profile store={props.store} />} />
+        <Route path="/dialogs" render={() => <DialogsContainer store={props.store} />} />
         <Route path="/news" render={() => <News />} />
         <Route path="/music" render={() => <Music />} />
         <Route path="/settings" render={() => <Settings />} />

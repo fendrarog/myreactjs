@@ -31,7 +31,7 @@ const Navbar = (props) => {
         </NavLink>
       </div>
       <div className={s.item}>
-       <Friends state={props.state} />
+       <Friends store={props.store} />
       </div>
     </nav>
   );

@@ -2,25 +2,24 @@ import s from "./Dialogs.module.css";
 import Message from "./Message/Message";
 import DialogItem from "./DialogItem/DialogItem";
 import React from "react";
-import { addMessageActionCreator, updateNewMessageTextActionCreator } from "../../state/messages-reducer";
 
 const Dialogs = (props) => {
-  let dialogsElements = props.state.dialogsData.map((d) => (
+  let dialogsElements = props.dialogsData.map((d) => (
     <DialogItem name={d.name} id={d.id} />
   ));
-  let messagesElements = props.state.messagesData.map((m) => (
+  let messagesElements = props.messagesData.map((m) => (
     <Message message={m.message} />
   ));
 
   let newMessageElement = React.createRef();
 
-  let addMessage = () => {
-    props.dispatch(addMessageActionCreator());
+  let onAddMessage = () => {
+    props.addMessage();
   };
 
   let onPostChange = (event) => {
     let text = event.target.value;
-    props.dispatch(updateNewMessageTextActionCreator(text));
+    props.updateNewMessageText(text);
   };
 
   return (
@@ -33,11 +32,11 @@ const Dialogs = (props) => {
             <textarea
               onChange={onPostChange}
               ref={newMessageElement}
-              value={props.state.newMessageText}
+              value={props.newMessageText}
             />
           </div>
           <div>
-            <button onClick={addMessage}>Отправить</button>
+            <button onClick={onAddMessage}>Отправить</button>
           </div>
         </div>
       </div>
