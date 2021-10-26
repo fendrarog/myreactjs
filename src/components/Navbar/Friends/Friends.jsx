@@ -3,8 +3,7 @@ import s from "./Friends.module.css";
 import FriendsItem from "./FriendsItem/FriendsItem";
 
 const Friends = (props) => {
-  let state = props.store.getState();
-  let friendsElements = state.sidebar.friendsData.map((f) => (
+  let friendsElements = props.state.sidebar.friendsData.map((f) => (
     <FriendsItem name={f.name} id={f.id} />
   ));
   return (
@@ -14,9 +13,7 @@ const Friends = (props) => {
           Friends
         </NavLink>
       </div>
-      <div className={s.friends}>
-        {friendsElements}
-      </div>
+      <div className={s.friends}>{friendsElements}</div>
     </div>
   );
 };
