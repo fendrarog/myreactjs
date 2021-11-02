@@ -12,7 +12,7 @@ function App(props) {
   return (
     <div className="app-wrapper">
       <Header />
-      <Navbar store={props.store} />
+      <Navbar />
       <div className="app-wrapper-content">
         <Route path="/profile" render={() => <Profile />} />
         <Route path="/dialogs" render={() => <DialogsContainer />} />

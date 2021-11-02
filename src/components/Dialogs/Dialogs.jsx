@@ -4,10 +4,10 @@ import DialogItem from "./DialogItem/DialogItem";
 import React from "react";
 
 const Dialogs = (props) => {
-  let dialogsElements = props.dialogsData.map((d) => (
+  let dialogsElements = props.messagesPage.dialogsData.map((d) => (
     <DialogItem name={d.name} id={d.id} />
   ));
-  let messagesElements = props.messagesData.map((m) => (
+  let messagesElements = props.messagesPage.messagesData.map((m) => (
     <Message message={m.message} />
   ));
 
@@ -32,7 +32,7 @@ const Dialogs = (props) => {
             <textarea
               onChange={onPostChange}
               ref={newMessageElement}
-              value={props.newMessageText}
+              value={props.messagesPage.newMessageText}
             />
           </div>
           <div>
