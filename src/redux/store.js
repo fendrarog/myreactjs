@@ -2,7 +2,6 @@ import messagesReducer from "./messages-reducer";
 import profileReducer from "./profile-reducer";
 import sidebarReducer from "./sidebar-reducer";
 
-
 let store = {
   _state: {
     profilePage: {
@@ -56,7 +55,6 @@ let store = {
   },
 
   dispatch(action) {
-
     profileReducer(this._state.profilePage, action);
     messagesReducer(this._state.messagesPage, action);
     sidebarReducer(this._state.sidebar, action);
@@ -64,7 +62,6 @@ let store = {
     this._callSubscriber(this._state);
   },
 };
-
 
 export default store;
 window.store = store;
