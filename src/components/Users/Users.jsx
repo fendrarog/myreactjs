@@ -2,7 +2,7 @@ import React from "react";
 import s from "./Users.module.css";
 import userPhoto from "../../assets/images/nophoto.jpg";
 import { NavLink } from "react-router-dom";
-import axios from "axios";
+import { usersAPI } from "../../api/api";
 
 let Users = (props) => {
   let pagesCount = Math.ceil(props.totalUsersCount / props.pageSize);
@@ -42,18 +42,11 @@ let Users = (props) => {
               {user.followed ? (
                 <button
                   onClick={() => {
-                    axios
-                      .delete(
-                        `https://social-network.samuraijs.com/api/1.0/follow/${user.id}`,
-                        {
-                          withCredentials: true,
-                          headers: {
-                            "API-KEY": "687933f7-96c0-4a10-bf9c-d896b194a307",
-                          },
-                        }
-                      )
+                    props.toggleIsFetching(true);
+                    usersAPI.unfollowAPI(user.id)
                       .then((response) => {
                         if (response.data.resultCode === 0) {
+                          props.toggleIsFetching(false);
                           props.unfollow(user.id);
                         }
                       });
@@ -64,19 +57,10 @@ let Users = (props) => {
               ) : (
                 <button
                   onClick={() => {
-                    axios
-                      .post(
-                        `https://social-network.samuraijs.com/api/1.0/follow/${user.id}`,
-                        {},
-                        {
-                          withCredentials: true,
-                          headers: {
-                            "API-KEY": "687933f7-96c0-4a10-bf9c-d896b194a307",
-                          },
-                        }
-                      )
-                      .then((response) => {
+                    props.toggleIsFetching(true);
+                    usersAPI.followAPI(user.id).then((response) => {
                         if (response.data.resultCode === 0) {
+                          props.toggleIsFetching(false);
                           props.follow(user.id);
                         }
                       });
