@@ -41,29 +41,38 @@ let Users = (props) => {
             <div>
               {user.followed ? (
                 <button
+                  disabled={props.followingProgress.some(
+                    (id) => id === user.id
+                  )}
                   onClick={() => {
                     props.toggleIsFetching(true);
-                    usersAPI.unfollowAPI(user.id)
-                      .then((response) => {
-                        if (response.data.resultCode === 0) {
-                          props.toggleIsFetching(false);
-                          props.unfollow(user.id);
-                        }
-                      });
+                    props.toggleFollowingProgress(true, user.id);
+                    usersAPI.unfollowAPI(user.id).then((response) => {
+                      if (response.data.resultCode === 0) {
+                        props.toggleIsFetching(false);
+                        props.unfollow(user.id);
+                      }
+                      props.toggleFollowingProgress(false, user.id);
+                    });
                   }}
                 >
                   Unfollow
                 </button>
               ) : (
                 <button
+                  disabled={props.followingProgress.some(
+                    (id) => id === user.id
+                  )}
                   onClick={() => {
                     props.toggleIsFetching(true);
+                    props.toggleFollowingProgress(true, user.id);
                     usersAPI.followAPI(user.id).then((response) => {
-                        if (response.data.resultCode === 0) {
-                          props.toggleIsFetching(false);
-                          props.follow(user.id);
-                        }
-                      });
+                      if (response.data.resultCode === 0) {
+                        props.toggleIsFetching(false);
+                        props.follow(user.id);
+                      }
+                      props.toggleFollowingProgress(false, user.id);
+                    });
                   }}
                 >
                   Follow
