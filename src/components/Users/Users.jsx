@@ -2,7 +2,6 @@ import React from "react";
 import s from "./Users.module.css";
 import userPhoto from "../../assets/images/nophoto.jpg";
 import { NavLink } from "react-router-dom";
-import { usersAPI } from "../../api/api";
 
 let Users = (props) => {
   let pagesCount = Math.ceil(props.totalUsersCount / props.pageSize);
@@ -44,8 +43,8 @@ let Users = (props) => {
                   disabled={props.followingProgress.some(
                     (id) => id === user.id
                   )}
-                  onClick={() => {
-                    props.toggleIsFetching(true);
+                  onClick={() => {props.unfollow(user.id)
+                    /* props.toggleIsFetching(true);
                     props.toggleFollowingProgress(true, user.id);
                     usersAPI.unfollowAPI(user.id).then((response) => {
                       if (response.data.resultCode === 0) {
@@ -53,7 +52,7 @@ let Users = (props) => {
                         props.unfollow(user.id);
                       }
                       props.toggleFollowingProgress(false, user.id);
-                    });
+                    }); */
                   }}
                 >
                   Unfollow
@@ -63,8 +62,8 @@ let Users = (props) => {
                   disabled={props.followingProgress.some(
                     (id) => id === user.id
                   )}
-                  onClick={() => {
-                    props.toggleIsFetching(true);
+                  onClick={() => {props.follow(user.id)
+                    /* props.toggleIsFetching(true);
                     props.toggleFollowingProgress(true, user.id);
                     usersAPI.followAPI(user.id).then((response) => {
                       if (response.data.resultCode === 0) {
@@ -72,7 +71,7 @@ let Users = (props) => {
                         props.follow(user.id);
                       }
                       props.toggleFollowingProgress(false, user.id);
-                    });
+                    }); */
                   }}
                 >
                   Follow

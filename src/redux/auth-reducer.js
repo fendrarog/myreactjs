@@ -1,3 +1,5 @@
+import { authAPI } from "../api/api";
+
 const SET_USER_DATA = "SET_USER_DATA";
 const SET_LOGIN_IMG = "SET_LOGIN_IMG";
 
@@ -35,5 +37,19 @@ export const setLoginImg = (loginImg) => ({
   type: SET_LOGIN_IMG,
   loginImg,
 });
+
+export const getAuthField = () => {
+  return dispatch => {
+    authAPI.meAPI().then((response) => {
+      if (response.data.resultCode === 0) {
+        let { id, login, email } = response.data.data;
+        dispatch(setAuthUserData(id, email, login));
+      }
+    });
+  authAPI.getLoginImgAPI().then((response) => {
+      dispatch(setLoginImg(response.data.photos.small));
+    });
+  }
+}
 
 export default authReducer;
