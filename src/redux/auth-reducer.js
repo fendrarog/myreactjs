@@ -38,18 +38,18 @@ export const setLoginImg = (loginImg) => ({
   loginImg,
 });
 
-export const getAuthField = () => {
-  return dispatch => {
+export const getAuthUserData = () => {
+  return (dispatch) => {
     authAPI.meAPI().then((response) => {
       if (response.data.resultCode === 0) {
         let { id, login, email } = response.data.data;
         dispatch(setAuthUserData(id, email, login));
+        authAPI.getLoginImgAPI(id).then((response) => {
+          dispatch(setLoginImg(response.data.photos.small));
+        });
       }
     });
-  authAPI.getLoginImgAPI().then((response) => {
-      dispatch(setLoginImg(response.data.photos.small));
-    });
-  }
-}
+  };
+};
 
 export default authReducer;

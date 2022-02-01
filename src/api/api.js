@@ -31,8 +31,8 @@ export const authAPI = {
   meAPI() {
     return instance.get(`auth/me`);
   },
-    getLoginImgAPI() {
-    return instance.get(`profile/2`);
+    getLoginImgAPI(userId) {
+    return instance.get(`profile/${userId}`);
   },
   
 }
