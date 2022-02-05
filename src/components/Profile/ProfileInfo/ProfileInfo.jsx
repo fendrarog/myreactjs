@@ -2,7 +2,8 @@ import Preloader from "../../Common/Preloader/Preloader";
 import s from "./ProfileInfo.module.css";
 import onStatus from "../../../assets/images/on.png";
 import offStatus from "../../../assets/images/off.png";
-import noPhoto from "../../../assets/images/nophoto.jpg"
+import noPhoto from "../../../assets/images/nophoto.jpg";
+import ProfileStatus from "./ProfileStatus";
 
 const ProfileInfo = (props) => {
   if (!props.profile) {
@@ -12,14 +13,21 @@ const ProfileInfo = (props) => {
   return (
     <div>
       <div>
-        <img
+        {/* <img
           src="https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg"
           alt=""
-        />
+        /> */}
       </div>
       <div className={s.descriptionBlock}>
         <div>{props.profile.fullName}</div>
-        <img src={props.profile.photos.large != null ? props.profile.photos.large : noPhoto} alt="#" />
+        <img
+          src={
+            props.profile.photos.large != null
+              ? props.profile.photos.large
+              : noPhoto
+          }
+          alt="#"
+        />
         <div>{props.profile.aboutMe}</div>
         <div>
           {props.profile.contacts.facebook} {props.profile.contacts.github}{" "}
@@ -35,6 +43,9 @@ const ProfileInfo = (props) => {
           {!props.profile.lookingForAJobDescription
             ? "статуса нет"
             : props.profile.lookingForAJobDescription}
+        </div>
+        <div>
+        <ProfileStatus status={"Zdarova banditi"}/>
         </div>
       </div>
     </div>
