@@ -12,7 +12,6 @@ let initialState = {
     { id: 3, message: "GG WP", likesCount: 3 },
     { id: 4, message: "Ez katka", likesCount: 7 },
   ],
-  newPostText: "shadowbolt",
   profile: null,
   status: "",
 };
@@ -20,16 +19,13 @@ let initialState = {
 const profileReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_POST: {
-      let newPost = {
-        id: 5,
-        message: state.newPostText,
-        likesCount: 0,
+      return {
+        ...state,
+        postsData: [
+          ...state.postsData,
+          { id: 5, message: action.newPost, likesCount: 0 },
+        ],
       };
-      let stateCopy = { ...state };
-      stateCopy.postsData = [...state.postsData];
-      stateCopy.postsData.push(newPost);
-      stateCopy.newPostText = "";
-      return stateCopy;
     }
     case UPDATE_NEW_POST_TEXT: {
       let stateCopy = { ...state };
@@ -47,7 +43,7 @@ const profileReducer = (state = initialState, action) => {
   }
 };
 
-export const addPostActionCreator = () => ({ type: ADD_POST });
+export const addPost = (newPost) => ({ type: ADD_POST, newPost });
 export const setUserProfile = (profile) => ({
   type: SET_USER_PROFILE,
   profile,

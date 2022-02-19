@@ -1,4 +1,5 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 import s from "./MyPosts.module.css";
 import Post from "./Post/Post";
 //import { addPostActionCreator, updateNewPostTextActionCreator } from "../../../redux/profile-reducer";
@@ -8,36 +9,43 @@ const MyPosts = (props) => {
     <Post message={p.message} likesCount={p.likesCount} />
   ));
 
-  let newPostElement = React.createRef();
-
-  let onAddPost = () => {
-    props.addPost();
-    //props.dispatch(addPostActionCreator());
-  };
-
-  let onPostChange = () => {
-    let text = newPostElement.current.value;
-    props.updateNewPostText(text);
-    //props.dispatch(updateNewPostTextActionCreator(text));
-  };
-
   return (
     <div className={s.postsBlock}>
       <h3>My posts</h3>
-      <div>
-        <textarea
-          onChange={onPostChange}
-          ref={newPostElement}
-          value={props.newPostText}
-        />
-      </div>
-      <div>
-        <button onClick={onAddPost}>Add post</button>
-        <button>Remove</button>
-      </div>
+
+      <AddPostForm addPost={props.addPost}/>
 
       <div className={s.posts}>{postsElements}</div>
     </div>
+  );
+};
+
+const AddPostForm = (props) => {
+  const {
+    register,
+    formState: { errors, isValid },
+    handleSubmit,
+    reset,
+  } = useForm({mode:"onChange"});
+
+  const onSubmit = (data) => {
+    props.addPost(data.postField);
+    reset();
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input
+        {...register("postField", {
+          required: "Пустое поле.",
+          maxLength: 10,
+        })}
+        placeholder="Введите текст"
+        autocomplete="off"
+      />
+      <div>{errors?.postField && <p>{errors?.postField.message || "Слишком много символов."}</p>}</div>
+      <input type="submit" disabled={!isValid}/>
+    </form>
   );
 };
 

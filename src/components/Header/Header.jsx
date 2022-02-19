@@ -3,6 +3,7 @@ import s from "./Header.module.css";
 import noPhoto from "../../assets/images/nophoto.jpg";
 
 const Header = (props) => {
+  
   return (
     <header className={s.header}>
       <img
@@ -10,8 +11,15 @@ const Header = (props) => {
         alt=""
       />
       <div className={s.loginBlock}>
-        <img src={!props.loginImg ? noPhoto : !props.isAuth ? noPhoto : props.loginImg } alt="#" />
-        {props.isAuth ? props.login : <NavLink to="/login">Login</NavLink>}
+        {props.login}
+        {props.isAuth ? ( <button onClick={props.logout}>Logout</button>
+        ) : (
+          <NavLink to="/login">Login</NavLink>
+        )}
+        <img
+          src={!props.loginImg || !props.isAuth ? noPhoto : props.loginImg}
+          alt="#"
+          />
       </div>
     </header>
   );

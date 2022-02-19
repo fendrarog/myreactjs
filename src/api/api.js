@@ -36,8 +36,8 @@ export const profileAPI = {
     return instance.get(`profile/status/` + userId);
   },
   updateUsersStatusAPI(status) {
-    return instance.put(`profile/status`, {status: status});
-  }
+    return instance.put(`profile/status`, { status: status });
+  },
 };
 
 export const authAPI = {
@@ -46,5 +46,11 @@ export const authAPI = {
   },
   getLoginImgAPI(userId) {
     return instance.get(`profile/${userId}`);
+  },
+  loginAPI(email, password, rememberMe = false) {
+    return instance.post(`auth/login`, { email, password, rememberMe });
+  },
+  logoutAPI() {
+    return instance.delete(`auth/login`);
   },
 };
