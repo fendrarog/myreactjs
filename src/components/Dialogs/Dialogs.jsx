@@ -3,23 +3,21 @@ import Message from "./Message/Message";
 import DialogItem from "./DialogItem/DialogItem";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { addMessage } from "../../redux/messages-reducer";
+import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 
-const Dialogs = (props) => {
-  let dialogsElements = props.messagesPage.dialogsData.map((d) => (
+const Dialogs = () => {
+  const { dialogsData, messagesData } = useSelector(
+    (state) => state.messagesPage
+  );
+
+  let dialogsElements = dialogsData.map((d) => (
     <DialogItem name={d.name} id={d.id} />
   ));
-  let messagesElements = props.messagesPage.messagesData.map((m) => (
+  let messagesElements = messagesData.map((m) => (
     <Message message={m.message} />
   ));
-
-  /*   let newMessageElement = React.createRef();
-  let onAddMessage = () => {
-    props.addMessage();
-  };
-  let onPostChange = (event) => {
-    let text = event.target.value;
-    props.updateNewMessageText(text);
-  }; */
 
   return (
     <div className={s.dialogs}>
@@ -27,12 +25,13 @@ const Dialogs = (props) => {
       <div>
         <div className={s.messages}>{messagesElements}</div>
       </div>
-      <AddMessageForm addMessage={props.addMessage} />
+      <AddMessageForm />
     </div>
   );
 };
 
-const AddMessageForm = (props) => {
+const AddMessageForm = () => {
+  const dispatch = useDispatch();
   const {
     register,
     formState: { errors, isValid },
@@ -41,19 +40,21 @@ const AddMessageForm = (props) => {
   } = useForm({ mode: "onChange" });
 
   const onSubmit = (data) => {
-    props.addMessage(data.messageField);
+    dispatch(addMessage(data.messageField));
     reset();
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={s.addMessageArea}>
-        <input
-          {...register("messageField", {
-            required: "Пустое поле.",
-            maxLength: 10,
-          })}
-          placeholder="Введите текст"
-          autocomplete="off"
-        />
+      <input
+        {...register("messageField", {
+          required: "Пустое поле.",
+          maxLength: 50,
+        })}
+        type="text"
+        placeholder="Введите текст"
+        autocomplete="off"
+        className={s.messageTextArea}
+      />
       <div>
         {errors?.messageField && (
           <p>{errors.messageField?.message || "Слишком много символов."}</p>
@@ -64,15 +65,4 @@ const AddMessageForm = (props) => {
   );
 };
 
-/* <div>
-        <textarea
-          onChange={onPostChange}
-          ref={newMessageElement}
-          value={props.messagesPage.newMessageText}
-        />
-      </div> 
-       <div>
-        <button onClick={onAddMessage}>Отправить</button>
-      </div> */
-
-export default Dialogs;
+export default withAuthRedirect(Dialogs);

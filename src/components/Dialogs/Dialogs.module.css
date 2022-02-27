@@ -22,3 +22,8 @@
 .addMessageArea {
   grid-area: a;
 }
+
+.messageTextArea {
+  height: 20px;
+  width: 200px;
+}

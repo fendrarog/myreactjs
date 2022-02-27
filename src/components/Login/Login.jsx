@@ -1,10 +1,12 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { login } from "../../redux/auth-reducer";
 
-const Login = (props) => {
+export const Login = () => {
+  const isAuth = useSelector((state) => state.auth.isAuth);
+  const dispatch = useDispatch();
   const {
     register,
     formState: { errors, isValid },
@@ -15,13 +17,13 @@ const Login = (props) => {
   });
 
   const onSubmit = (data) => {
-    props.login(data.login, data.password, data.rememberMe);
+    dispatch(login(data.login, data.password, data.rememberMe));
     reset();
   };
 
-  if (props.isAuth) {
+  if (isAuth) {
     return <Redirect to="/profile" />;
-  } 
+  }
 
   return (
     <div>
@@ -50,7 +52,7 @@ const Login = (props) => {
                 message: "Минимум 5 символов.",
               },
             })}
-//            type="password"
+            //            type="password"
           />
         </label>
         <div>
@@ -67,9 +69,3 @@ const Login = (props) => {
     </div>
   );
 };
-
-const mapStateToProps = (state) => ({
-  isAuth: state.auth.isAuth,
-});
-
-export default connect(mapStateToProps, { login })(Login);

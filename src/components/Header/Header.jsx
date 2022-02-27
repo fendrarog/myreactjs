@@ -1,9 +1,15 @@
 import { NavLink } from "react-router-dom";
 import s from "./Header.module.css";
 import noPhoto from "../../assets/images/nophoto.jpg";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/auth-reducer";
 
-const Header = (props) => {
-  
+export const Header = () => {
+  /*const isAuth = useSelector((state) => state.auth.isAuth);
+  const login = useSelector((state) => state.auth.userLogin);
+  const loginImg = useSelector((state) => state.auth.loginImg); */
+  const {isAuth, userLogin, loginImg} = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   return (
     <header className={s.header}>
       <img
@@ -11,18 +17,20 @@ const Header = (props) => {
         alt=""
       />
       <div className={s.loginBlock}>
-        {props.login}
-        {props.isAuth ? ( <button onClick={props.logout}>Logout</button>
+        {userLogin}
+        {isAuth ? (
+          <button
+            onClick={() => {
+              dispatch(logout());
+            }}
+          >
+            Logout
+          </button>
         ) : (
           <NavLink to="/login">Login</NavLink>
         )}
-        <img
-          src={!props.loginImg || !props.isAuth ? noPhoto : props.loginImg}
-          alt="#"
-          />
+        <img src={!loginImg || !isAuth ? noPhoto : loginImg} alt="#" />
       </div>
     </header>
   );
 };
-
-export default Header;

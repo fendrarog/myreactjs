@@ -1,11 +1,14 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import s from "./MyPosts.module.css";
 import Post from "./Post/Post";
-//import { addPostActionCreator, updateNewPostTextActionCreator } from "../../../redux/profile-reducer";
+import { addPost } from "../../../redux/profile-reducer";
 
 const MyPosts = (props) => {
-  let postsElements = props.postsData.map((p) => (
+  const postsData = useSelector((state) => state.profilePage.postsData);
+
+  let postsElements = postsData.map((p) => (
     <Post message={p.message} likesCount={p.likesCount} />
   ));
 
@@ -13,7 +16,7 @@ const MyPosts = (props) => {
     <div className={s.postsBlock}>
       <h3>My posts</h3>
 
-      <AddPostForm addPost={props.addPost}/>
+      <AddPostForm />
 
       <div className={s.posts}>{postsElements}</div>
     </div>
@@ -21,15 +24,17 @@ const MyPosts = (props) => {
 };
 
 const AddPostForm = (props) => {
+  const dispatch = useDispatch();
+
   const {
     register,
     formState: { errors, isValid },
     handleSubmit,
     reset,
-  } = useForm({mode:"onChange"});
+  } = useForm({ mode: "onChange" });
 
   const onSubmit = (data) => {
-    props.addPost(data.postField);
+    dispatch(addPost(data.postField));
     reset();
   };
 
@@ -43,8 +48,12 @@ const AddPostForm = (props) => {
         placeholder="Введите текст"
         autocomplete="off"
       />
-      <div>{errors?.postField && <p>{errors?.postField.message || "Слишком много символов."}</p>}</div>
-      <input type="submit" disabled={!isValid}/>
+      <div>
+        {errors?.postField && (
+          <p>{errors?.postField.message || "Слишком много символов."}</p>
+        )}
+      </div>
+      <input type="submit" disabled={!isValid} />
     </form>
   );
 };

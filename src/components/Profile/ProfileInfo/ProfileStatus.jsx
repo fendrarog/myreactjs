@@ -1,54 +1,49 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUserStatus } from "../../../redux/profile-reducer";
 
-class ProfileStatus extends React.Component {
-  state = {
-    editMode: false,
-    status: this.props.status,
-  };
+const ProfileStatus = () => {
+  const statusProps = useSelector((state) => state.profilePage.status);
+  const dispatch = useDispatch();
 
-  toggleActivateEditMode = (isEditMode) => {
-    this.setState({ editMode: isEditMode });
-    !isEditMode && this.props.updateUserStatus(this.state.status);
-  };
+  const [editMode, setEditMode] = useState(false);
+  const [statusLocal, setStatusLocal] = useState(statusProps);
 
-  onStatusUserChange = (e) => {
-    this.setState({ status: e.currentTarget.value });
-  };
+  useEffect(() => {
+    setStatusLocal(statusProps);
+  }, [statusProps]);
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.status !== this.props.status) {
-      this.setState({ status: this.props.status });
+  const toggleActivateEditMode = () => {
+    setEditMode(!editMode);
+    if (editMode) {
+      dispatch(updateUserStatus(statusLocal));
     }
-  }
+  };
 
-  render() {
-    return (
-      <>
-        {!this.state.editMode ? (
-          <div>
-            <span
-              onDoubleClick={() => {
-                this.toggleActivateEditMode(true);
-              }}
-            >
-              {this.props.status}
-            </span>
-          </div>
-        ) : (
-          <div>
-            <input
-              onChange={this.onStatusUserChange}
-              autoFocus={true}
-              onBlur={() => {
-                this.toggleActivateEditMode(false);
-              }}
-              value={this.state.status}
-            />
-          </div>
-        )}
-      </>
-    );
-  }
-}
+  const onStatusUserChange = (event) => {
+    setStatusLocal(event.currentTarget.value);
+  };
+
+  return (
+    <div>
+      {!editMode ? (
+        <div>
+          <span onClick={toggleActivateEditMode}>
+            {statusProps || "------"}
+          </span>
+        </div>
+      ) : (
+        <div>
+          <input
+            onChange={onStatusUserChange}
+            onBlur={toggleActivateEditMode}
+            autoFocus={true}
+            value={statusLocal}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default ProfileStatus;

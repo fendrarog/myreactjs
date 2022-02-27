@@ -1,9 +1,12 @@
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import s from "./Friends.module.css";
 import FriendsItem from "./FriendsItem/FriendsItem";
 
-const Friends = (props) => {
-  let friendsElements = props.friendsData.map((f) => (
+const Friends = () => {
+  const friendsData = useSelector((state) => state.sidebar.friendsData);
+
+  let friendsElements = friendsData.map((f) => (
     <FriendsItem name={f.name} id={f.id} />
   ));
   return (
