@@ -7,7 +7,7 @@ const Friends = () => {
   const friendsData = useSelector((state) => state.sidebar.friendsData);
 
   let friendsElements = friendsData.map((f) => (
-    <FriendsItem name={f.name} id={f.id} />
+    <FriendsItem key={f.id} name={f.name} id={f.id} />
   ));
   return (
     <div className={s.friendsWrapper}>

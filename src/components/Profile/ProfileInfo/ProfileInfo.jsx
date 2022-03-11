@@ -4,10 +4,14 @@ import onStatus from "../../../assets/images/on.png";
 import offStatus from "../../../assets/images/off.png";
 import noPhoto from "../../../assets/images/nophoto.jpg";
 import ProfileStatus from "./ProfileStatus";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
+import { updateUserPicture } from "../../../redux/profile-reducer";
+import { useEffect, useState } from "react";
 
-const ProfileInfo = (props) => {
+const ProfileInfo = ({ isOwnersUserPage }) => {
   const profile = useSelector((state) => state.profilePage.profile);
+  const isOwner = useSelector((state) => state.profilePage.isOwner);
 
   if (!profile) {
     return <Preloader />;
@@ -24,9 +28,13 @@ const ProfileInfo = (props) => {
       <div className={s.descriptionBlock}>
         <div>{profile.fullName}</div>
         <img
-          src={profile.photos.large != null ? profile.photos.large : noPhoto}
+          src={profile.photos.large ? profile.photos.large : noPhoto}
           alt="#"
+          className={s.photoProfile}
         />
+
+        {isOwner && <AddUserPictureForm />}
+
         <div>{profile.aboutMe}</div>
         <div>
           {profile.contacts.facebook} {profile.contacts.github}{" "}
@@ -45,12 +53,39 @@ const ProfileInfo = (props) => {
         </div>
         <div>
           <ProfileStatus
-            status={props.status}
-            updateUserStatus={props.updateUserStatus}
+            isOwner={isOwner}
+            isOwnersUserPage={isOwnersUserPage}
           />
         </div>
       </div>
     </div>
+  );
+};
+
+const AddUserPictureForm = () => {
+  const photo = useSelector((state) => state.profilePage.profile.photos);
+  const dispatch = useDispatch();
+  const { register, reset, handleSubmit } = useForm();
+  const [selectedFile, setSelectedFile] = useState(photo);
+
+  const onFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  useEffect(() => {
+    setSelectedFile(selectedFile);
+    dispatch(updateUserPicture(selectedFile));
+    reset();
+  }, [selectedFile, dispatch, reset]);
+
+  /*   const onSubmit = () => {
+    dispatch(updateUserPicture(selectedFile));
+  }; */
+
+  return (
+    <form onSubmit={handleSubmit()}>
+      <input {...register("userPicture")} type="file" onChange={onFileChange} className={s.customFileInput} />
+    </form>
   );
 };
 

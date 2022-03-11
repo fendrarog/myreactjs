@@ -4,11 +4,11 @@ import noPhoto from "../../assets/images/nophoto.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/auth-reducer";
 
-export const Header = () => {
+const Header = () => {
   /*const isAuth = useSelector((state) => state.auth.isAuth);
   const login = useSelector((state) => state.auth.userLogin);
   const loginImg = useSelector((state) => state.auth.loginImg); */
-  const {isAuth, userLogin, loginImg} = useSelector((state) => state.auth);
+  const { isAuth, userLogin, loginImg } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   return (
     <header className={s.header}>
@@ -29,8 +29,10 @@ export const Header = () => {
         ) : (
           <NavLink to="/login">Login</NavLink>
         )}
-        <img src={!loginImg || !isAuth ? noPhoto : loginImg} alt="#" />
+        {isAuth && <img src={!loginImg ? noPhoto : loginImg} alt="#" />}
       </div>
     </header>
   );
 };
+
+export default Header;

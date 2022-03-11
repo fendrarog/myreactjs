@@ -1,18 +1,11 @@
 import React from "react";
 import reactDom from "react-dom";
-import { BrowserRouter } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
-import store from "./redux/redux-store";
-import { Provider } from "react-redux";
 import App from "./App";
 
 //let rerenderEntireTree = () => {
 reactDom.render(
-  <BrowserRouter>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </BrowserRouter>,
+      <App />,
   document.getElementById("root")
 );
 //};

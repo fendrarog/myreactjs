@@ -3,9 +3,9 @@ let initialState = {
     { id: 1, name: "Iana" },
     { id: 2, name: "Pavlik" },
     { id: 3, name: "Duriman" },
-    { id: 3, name: "Kalita" },
-    { id: 3, name: "Petush" },
-    { id: 3, name: "Borovik" },
+    { id: 4, name: "Kalita" },
+    { id: 5, name: "Petush" },
+    { id: 6, name: "Borovik" },
   ],
 };
 

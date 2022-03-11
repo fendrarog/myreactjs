@@ -1,41 +1,20 @@
-import React, { useEffect } from "react";
+import React from "react";
 import s from "./Users.module.css";
 import userPhoto from "../../assets/images/nophoto.jpg";
 import { NavLink } from "react-router-dom";
 import UsersPaginator from "./UsersPaginator";
-import { useDispatch, useSelector } from "react-redux";
-import { follow, requestUsers, unfollow } from "../../redux/users-reducer";
-import {
-  selectCurrentPage,
-  selectFollowingProgress,
-  selectHandleUsers,
-  selectIsFetching,
-  selectPageSize,
-} from "../../redux/users-selectors";
-import Preloader from "../Common/Preloader/Preloader";
 
-let Users = () => {
-  const currentPage = useSelector((state) => selectCurrentPage(state));
-  const pageSize = useSelector((state) => selectPageSize(state));
-  const users = useSelector((state) => selectHandleUsers(state));
-  const isFetching = useSelector((state) => selectIsFetching(state));
-  const followingProgress = useSelector((state) =>
-    selectFollowingProgress(state)
-  );
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(requestUsers(currentPage, pageSize));
-  }, [dispatch, currentPage, pageSize]);
-
-  if (isFetching) {
-    return <Preloader currentPage={currentPage} pageSize={pageSize} />;
+let Users = (props) => {
+  let pagesCount = Math.ceil(props.totalUsersCount / props.pageSize);
+  let pages = [];
+  for (let i = 1; i <= pagesCount; i++) {
+    pages.push(i);
   }
   return (
     <div>
-      <UsersPaginator currentPage={currentPage} pageSize={pageSize} />
+      <UsersPaginator />
 
-      {users.map((user) => (
+      {props.users.map((user) => (
         <div key={user.id}>
           <span>
             <div>
@@ -52,18 +31,22 @@ let Users = () => {
             <div>
               {user.followed ? (
                 <button
-                  disabled={followingProgress.some((id) => id === user.id)}
+                  disabled={props.followingProgress.some(
+                    (id) => id === user.id
+                  )}
                   onClick={() => {
-                    dispatch(unfollow(user.id));
+                    props.unfollow(user.id);
                   }}
                 >
                   Unfollow
                 </button>
               ) : (
                 <button
-                  disabled={followingProgress.some((id) => id === user.id)}
+                  disabled={props.followingProgress.some(
+                    (id) => id === user.id
+                  )}
                   onClick={() => {
-                    dispatch(follow(user.id));
+                    props.follow(user.id);
                   }}
                 >
                   Follow

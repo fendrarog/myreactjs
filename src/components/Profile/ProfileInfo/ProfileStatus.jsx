@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserStatus } from "../../../redux/profile-reducer";
 
-const ProfileStatus = () => {
+const ProfileStatus = ({isOwner, isOwnersUserPage}) => {
   const statusProps = useSelector((state) => state.profilePage.status);
   const dispatch = useDispatch();
 
@@ -20,15 +20,15 @@ const ProfileStatus = () => {
     }
   };
 
-  const onStatusUserChange = (event) => {
-    setStatusLocal(event.currentTarget.value);
+  const onStatusUserChange = (e) => {
+    setStatusLocal(e.currentTarget.value);
   };
 
   return (
     <div>
       {!editMode ? (
         <div>
-          <span onClick={toggleActivateEditMode}>
+          <span onClick={(isOwner || isOwnersUserPage) && toggleActivateEditMode}>
             {statusProps || "------"}
           </span>
         </div>

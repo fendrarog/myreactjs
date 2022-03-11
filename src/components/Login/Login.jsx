@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { login } from "../../redux/auth-reducer";
 
-export const Login = () => {
+const Login = () => {
   const isAuth = useSelector((state) => state.auth.isAuth);
   const dispatch = useDispatch();
   const {
@@ -56,7 +56,7 @@ export const Login = () => {
           />
         </label>
         <div>
-          {errors?.password && <p>{errors.password?.message || "Error!"}</p>}
+          {errors?.password && <p>{errors?.password?.message || "Error!"}</p>}
         </div>
         <label>
           Remember me
@@ -69,3 +69,5 @@ export const Login = () => {
     </div>
   );
 };
+
+export default Login;

@@ -9,7 +9,7 @@ const MyPosts = (props) => {
   const postsData = useSelector((state) => state.profilePage.postsData);
 
   let postsElements = postsData.map((p) => (
-    <Post message={p.message} likesCount={p.likesCount} />
+    <Post key={p.id} message={p.message} likesCount={p.likesCount} />
   ));
 
   return (
@@ -46,11 +46,11 @@ const AddPostForm = (props) => {
           maxLength: 10,
         })}
         placeholder="Введите текст"
-        autocomplete="off"
+        autoComplete="off"
       />
       <div>
         {errors?.postField && (
-          <p>{errors?.postField.message || "Слишком много символов."}</p>
+          <p>{errors?.postField?.message || "Слишком много символов."}</p>
         )}
       </div>
       <input type="submit" disabled={!isValid} />

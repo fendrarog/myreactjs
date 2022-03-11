@@ -1,9 +1,21 @@
 .userPhoto {
-    width: 70px;
-    height: 70px;
-    border-radius: 35px;
+  width: 70px;
+  height: 70px;
+  border-radius: 35px;
 }
 
 .selectedPage {
-   font-weight: bold;
+  font-weight: bold;
+  border: 3px inset tomato;
+  color: #ccc;
+}
+
+.paginator {
+  margin: 10px 0;
+}
+
+.paginator span {
+  margin: 1px;
+  padding: 0 2px 0;
+  border: 1px solid rgb(31, 23, 23);
 }

@@ -10,7 +10,8 @@ const TOGGLE_FOLLOWING_PROGRESS = "TOGGLE_FOLLOWING_PROGRESS";
 
 let initialState = {
   users: [],
-  pageSize: 7,
+  pageSize: 8,
+  portionSize: 15,
   totalUsersCount: 0,
   currentPage: 1,
   isFetching: false,
@@ -22,7 +23,6 @@ const usersReducer = (state = initialState, action) => {
     case FOLLOW:
       return {
         ...state,
-        /* users: [...state.users], */
         users: state.users.map((user) => {
           if (user.id === action.userId) {
             return { ...user, followed: true };
@@ -33,7 +33,6 @@ const usersReducer = (state = initialState, action) => {
     case UNFOLLOW:
       return {
         ...state,
-        /* users: [...state.users], */
         users: state.users.map((user) => {
           if (user.id === action.userId) {
             return { ...user, followed: false };

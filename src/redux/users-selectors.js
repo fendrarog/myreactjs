@@ -8,6 +8,10 @@ export const selectHandleUsers = createSelector(selectUsers, (users) => {
   return users.filter((u) => true);
 });
 
+export const selectPortionSize = (state) => {
+  return state.usersPage.portionSize;
+};
+
 export const selectPageSize = (state) => {
   return state.usersPage.pageSize;
 };
@@ -15,6 +19,14 @@ export const selectPageSize = (state) => {
 export const selectTotalUsersCount = (state) => {
   return state.usersPage.totalUsersCount;
 };
+
+export const selectPagesCount = createSelector(
+  selectTotalUsersCount,
+  selectPageSize,
+  (totalUsersCount, pageSize) => {
+    return Math.ceil(totalUsersCount / pageSize);
+  }
+);
 
 export const selectCurrentPage = (state) => {
   return state.usersPage.currentPage;

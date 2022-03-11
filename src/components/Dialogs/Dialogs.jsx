@@ -13,10 +13,10 @@ const Dialogs = () => {
   );
 
   let dialogsElements = dialogsData.map((d) => (
-    <DialogItem name={d.name} id={d.id} />
+    <DialogItem key={d.id} name={d.name} id={d.id} />
   ));
   let messagesElements = messagesData.map((m) => (
-    <Message message={m.message} />
+    <Message key={m.id} message={m.message} />
   ));
 
   return (
@@ -57,7 +57,7 @@ const AddMessageForm = () => {
       />
       <div>
         {errors?.messageField && (
-          <p>{errors.messageField?.message || "Слишком много символов."}</p>
+          <p>{errors?.messageField?.message || "Слишком много символов."}</p>
         )}
       </div>
       <input type="submit" disabled={!isValid} />

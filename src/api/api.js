@@ -38,6 +38,15 @@ export const profileAPI = {
   updateUsersStatusAPI(status) {
     return instance.put(`profile/status`, { status: status });
   },
+  updateUserPictureAPI(userPicture) {
+    const formData = new FormData();
+    formData.append("image", userPicture);
+    return instance.put(`profile/photo`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
 };
 
 export const authAPI = {
