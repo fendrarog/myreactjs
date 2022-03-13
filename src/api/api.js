@@ -47,14 +47,14 @@ export const profileAPI = {
       },
     });
   },
+  updateOwnersProfileAPI(dataDescription) {
+    return instance.put(`profile`, dataDescription);
+  },
 };
 
 export const authAPI = {
   meAPI() {
     return instance.get(`auth/me`);
-  },
-  getLoginImgAPI(userId) {
-    return instance.get(`profile/${userId}`);
   },
   loginAPI(email, password, rememberMe = false) {
     return instance.post(`auth/login`, { email, password, rememberMe });

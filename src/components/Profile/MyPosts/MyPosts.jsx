@@ -5,7 +5,7 @@ import s from "./MyPosts.module.css";
 import Post from "./Post/Post";
 import { addPost } from "../../../redux/profile-reducer";
 
-const MyPosts = (props) => {
+const MyPosts = () => {
   const postsData = useSelector((state) => state.profilePage.postsData);
 
   let postsElements = postsData.map((p) => (
@@ -23,7 +23,7 @@ const MyPosts = (props) => {
   );
 };
 
-const AddPostForm = (props) => {
+const AddPostForm = () => {
   const dispatch = useDispatch();
 
   const {

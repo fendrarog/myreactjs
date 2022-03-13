@@ -43,7 +43,7 @@ const profileReducer = (state = initialState, action) => {
       return { ...state, status: action.status };
     }
     case SET_USER_PICTURE: {
-      return { ...state, profile: {...state.profile, photos: action.photo}};
+      return { ...state, profile: { ...state.profile, photos: action.photo } };
     }
     case TOGGLE_IS_OWNER: {
       return { ...state, isOwner: action.isOwner };
@@ -71,14 +71,15 @@ export const setUserPicture = (photo) => ({
 
 export const setUserStatus = (status) => ({ type: SET_USER_STATUS, status });
 
+
 export const getUserProfile = (userId) => async (dispatch) => {
   let response = await usersAPI.getUsersProfileAPI(userId);
+  console.log(response);
   dispatch(setUserProfile(response.data));
 };
 
 export const updateUserPicture = (userPicture) => async (dispatch) => {
   let response = await profileAPI.updateUserPictureAPI(userPicture);
-  console.log(response);
   if (response.data.resultCode === 0) {
     dispatch(setUserPicture(response.data.data.photos));
   }
@@ -96,6 +97,14 @@ export const updateUserStatus = (status) => async (dispatch) => {
   let response = await profileAPI.updateUsersStatusAPI(status);
   if (response.data.resultCode === 0) {
     dispatch(setUserStatus(status));
+  }
+};
+
+export const updateOwnersProfile = (dataDescription) => async (dispatch) => {
+  let response = await profileAPI.updateOwnersProfileAPI(dataDescription);
+  console.log(response);
+  if (response.data.resultCode === 0) {
+    dispatch(updateOwnersProfile);
   }
 };
 

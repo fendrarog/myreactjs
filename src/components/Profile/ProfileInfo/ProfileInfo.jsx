@@ -4,14 +4,15 @@ import onStatus from "../../../assets/images/on.png";
 import offStatus from "../../../assets/images/off.png";
 import noPhoto from "../../../assets/images/nophoto.jpg";
 import ProfileStatus from "./ProfileStatus";
-import { useDispatch, useSelector } from "react-redux";
-import { useForm } from "react-hook-form";
-import { updateUserPicture } from "../../../redux/profile-reducer";
-import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import ProfileDataForm from "./ProfileDataForm";
 
 const ProfileInfo = ({ isOwnersUserPage }) => {
   const profile = useSelector((state) => state.profilePage.profile);
   const isOwner = useSelector((state) => state.profilePage.isOwner);
+
+  const [editMode, setEditMode] = useState(false);
 
   if (!profile) {
     return <Preloader />;
@@ -19,73 +20,89 @@ const ProfileInfo = ({ isOwnersUserPage }) => {
 
   return (
     <div>
-      <div>
-        {/* <img
-          src="https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg"
-          alt=""
-        /> */}
-      </div>
-      <div className={s.descriptionBlock}>
-        <div>{profile.fullName}</div>
+      {editMode ? (
+        <ProfileDataForm
+          profile={profile}
+          isOwner={isOwner}
+          isOwnersUserPage={isOwnersUserPage}
+          jumpToNonEditMode={() => setEditMode(false)}
+        />
+      ) : (
+        <ProfileData
+          profile={profile}
+          isOwner={isOwner}
+          isOwnersUserPage={isOwnersUserPage}
+          jumpToEditMode={() => setEditMode(true)}
+        />
+      )}
+    </div>
+  );
+};
+
+const Contact = ({ contactKey, contactValue }) => {
+  return (
+    <div className={s.contact}>
+      <b>{contactKey}: </b>
+      {contactValue}
+    </div>
+  );
+};
+
+const ProfileData = ({
+  profile,
+  isOwner,
+  isOwnersUserPage,
+  jumpToEditMode,
+}) => {
+  return (
+    <div className={s.descriptionBlock}>
+      <div className={s.descriptionItem}>{profile.fullName.toUpperCase()}</div>
+      <div className={s.descriptionItem}>
         <img
           src={profile.photos.large ? profile.photos.large : noPhoto}
           alt="#"
           className={s.photoProfile}
         />
-
-        {isOwner && <AddUserPictureForm />}
-
-        <div>{profile.aboutMe}</div>
-        <div>
-          {profile.contacts.facebook} {profile.contacts.github}{" "}
-          {profile.contacts.website} {profile.contacts.vk}{" "}
-          {profile.contacts.twitter} {profile.contacts.instagram}
-        </div>
-        <div>
-          <img
-            className={s.lfjStatus}
-            src={profile.lookingForAJob === true ? onStatus : offStatus}
-            alt="#"
-          />
-          {!profile.lookingForAJobDescription
-            ? "статуса нет"
-            : profile.lookingForAJobDescription}
-        </div>
-        <div>
-          <ProfileStatus
-            isOwner={isOwner}
-            isOwnersUserPage={isOwnersUserPage}
-          />
-        </div>
       </div>
+      <div className={s.descriptionItem}>
+        <b>About me: </b>
+        {profile.aboutMe}
+      </div>
+      <div className={s.descriptionItem}>
+        <b>Looking for a job: </b>
+        <img
+          className={s.lfjStatus}
+          src={profile.lookingForAJob ? onStatus : offStatus}
+          alt="#"
+        />
+      </div>
+      {profile.lookingForAJob && (
+        <div className={s.descriptionItem}>
+          <b>My professional experience: </b>
+          {profile.lookingForAJobDescription}
+        </div>
+      )}
+      <div className={s.descriptionItem}>
+        <b>Contacts: </b>
+        {Object.keys(profile.contacts).map((key) => {
+          return (
+            <Contact
+              key={key}
+              contactKey={key}
+              contactValue={profile.contacts[key]}
+            />
+          );
+        })}
+      </div>
+      <div className={s.descriptionItem}>
+        <ProfileStatus isOwner={isOwner} isOwnersUserPage={isOwnersUserPage} />
+      </div>
+      {(isOwner || isOwnersUserPage) && (
+        <div className={s.descriptionItem}>
+          <button onClick={jumpToEditMode}>Edit data</button>
+        </div>
+      )}
     </div>
-  );
-};
-
-const AddUserPictureForm = () => {
-  const photo = useSelector((state) => state.profilePage.profile.photos);
-  const dispatch = useDispatch();
-  const { register, reset, handleSubmit } = useForm();
-  const [selectedFile, setSelectedFile] = useState(photo);
-
-  const onFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
-  };
-
-  useEffect(() => {
-    setSelectedFile(selectedFile);
-    dispatch(updateUserPicture(selectedFile));
-    reset();
-  }, [selectedFile, dispatch, reset]);
-
-  /*   const onSubmit = () => {
-    dispatch(updateUserPicture(selectedFile));
-  }; */
-
-  return (
-    <form onSubmit={handleSubmit()}>
-      <input {...register("userPicture")} type="file" onChange={onFileChange} className={s.customFileInput} />
-    </form>
   );
 };
 

@@ -2,6 +2,10 @@
   padding: 10px;
 }
 
+.descriptionItem {
+  margin-bottom: 10px;
+}
+
 .lfjStatus {
   width: 30px;
   height: 30px;
@@ -20,7 +24,7 @@
   visibility: hidden;
 }
 .customFileInput::before {
-  content: "Файл не выбран";
+  content: "Загрузить фото";
   color: black;
   display: inline-block;
   background: -webkit-linear-gradient(top, #f9f9f9, #e3e3e3);
@@ -42,4 +46,8 @@
 }
 .customFileInput:active::before {
   background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
+.contact {
+  padding-left: 10px;
 }

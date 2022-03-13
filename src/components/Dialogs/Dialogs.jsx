@@ -52,7 +52,7 @@ const AddMessageForm = () => {
         })}
         type="text"
         placeholder="Введите текст"
-        autocomplete="off"
+        autoComplete="off"
         className={s.messageTextArea}
       />
       <div>
