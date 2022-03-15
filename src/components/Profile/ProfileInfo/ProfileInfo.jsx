@@ -13,7 +13,7 @@ const ProfileInfo = ({ isOwnersUserPage }) => {
   const isOwner = useSelector((state) => state.profilePage.isOwner);
 
   const [editMode, setEditMode] = useState(false);
-
+  debugger;
   if (!profile) {
     return <Preloader />;
   }
@@ -39,24 +39,15 @@ const ProfileInfo = ({ isOwnersUserPage }) => {
   );
 };
 
-const Contact = ({ contactKey, contactValue }) => {
-  return (
-    <div className={s.contact}>
-      <b>{contactKey}: </b>
-      {contactValue}
-    </div>
-  );
-};
-
 const ProfileData = ({
   profile,
   isOwner,
   isOwnersUserPage,
   jumpToEditMode,
 }) => {
+  debugger;
   return (
     <div className={s.descriptionBlock}>
-      <div className={s.descriptionItem}>{profile.fullName.toUpperCase()}</div>
       <div className={s.descriptionItem}>
         <img
           src={profile.photos.large ? profile.photos.large : noPhoto}
@@ -64,6 +55,7 @@ const ProfileData = ({
           className={s.photoProfile}
         />
       </div>
+      <div className={s.descriptionItem}>{profile.fullName.toUpperCase()}</div>
       <div className={s.descriptionItem}>
         <b>About me: </b>
         {profile.aboutMe}
@@ -94,14 +86,23 @@ const ProfileData = ({
           );
         })}
       </div>
-      <div className={s.descriptionItem}>
-        <ProfileStatus isOwner={isOwner} isOwnersUserPage={isOwnersUserPage} />
-      </div>
       {(isOwner || isOwnersUserPage) && (
         <div className={s.descriptionItem}>
           <button onClick={jumpToEditMode}>Edit data</button>
         </div>
       )}
+      <div className={s.descriptionItem}>
+        <ProfileStatus isOwner={isOwner} isOwnersUserPage={isOwnersUserPage} />
+      </div>
+    </div>
+  );
+};
+
+const Contact = ({ contactKey, contactValue }) => {
+  return (
+    <div className={s.contact}>
+      <b>{contactKey}: </b>
+      {contactValue}
     </div>
   );
 };

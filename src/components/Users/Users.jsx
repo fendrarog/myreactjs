@@ -29,7 +29,7 @@ let Users = () => {
   }, [dispatch, currentPage, pageSize]);
 
   if (isFetching) {
-    return <Preloader currentPage={currentPage} pageSize={pageSize} />;
+    return <Preloader />;
   }
   return (
     <div>

@@ -7,15 +7,10 @@ import Preloader from "../Common/Preloader/Preloader";
 
 const Header = () => {
   const { isAuth, userLogin } = useSelector((state) => state.auth);
-  
+
   const profile = useSelector((state) => state.profilePage.profile);
 
-
   const dispatch = useDispatch();
-
-  if (!profile) {
-    return <Preloader />;
-  }
 
   return (
     <header className={s.header}>
@@ -36,7 +31,7 @@ const Header = () => {
         ) : (
           <NavLink to="/login">Login</NavLink>
         )}
-        {isAuth && <img src={profile.photos.small ? profile.photos.small : noPhoto} alt="#" />}
+        {profile ? <img src={isAuth ? profile.photos.small : noPhoto} alt="#" /> : <Preloader />}
       </div>
     </header>
   );

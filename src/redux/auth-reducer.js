@@ -36,15 +36,12 @@ export const getAuthUserData = () => (dispatch) => {
   });
 };
 
-export const login = (email, password, rememberMe) => {
-  return (dispatch) => {
-    authAPI.loginAPI(email, password, rememberMe).then((response) => {
+export const login = (email, password, rememberMe) => async(dispatch) => {
+    const response = authAPI.loginAPI(email, password, rememberMe)
       if (response.data.resultCode === 0) {
         console.log(response);
         dispatch(getAuthUserData());
       }
-    });
-  };
 };
 
 export const logout = () => {

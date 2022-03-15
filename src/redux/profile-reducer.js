@@ -6,6 +6,7 @@ const SET_USER_PROFILE = "SET_USER_PROFILE";
 const SET_USER_STATUS = "SET_USER_STATUS";
 const SET_USER_PICTURE = "SET_USER_PICTURE";
 const TOGGLE_IS_OWNER = "TOGGLE_IS_OWNER";
+const SET_OWNERS_PROFILE = "SET_OWNERS_PROFILE";
 
 let initialState = {
   postsData: [
@@ -48,6 +49,9 @@ const profileReducer = (state = initialState, action) => {
     case TOGGLE_IS_OWNER: {
       return { ...state, isOwner: action.isOwner };
     }
+    case SET_OWNERS_PROFILE: {
+      return { ...state, profile: { ...state.profile, ...action.payload } };
+    }
     default:
       return state;
   }
@@ -71,17 +75,22 @@ export const setUserPicture = (photo) => ({
 
 export const setUserStatus = (status) => ({ type: SET_USER_STATUS, status });
 
+export const setOwnersProfile = (payload) => ({
+  type: SET_OWNERS_PROFILE,
+  payload: payload,
+});
 
 export const getUserProfile = (userId) => async (dispatch) => {
-  let response = await usersAPI.getUsersProfileAPI(userId);
+  const response = await usersAPI.getUsersProfileAPI(userId);
   console.log(response);
   dispatch(setUserProfile(response.data));
 };
 
 export const updateUserPicture = (userPicture) => async (dispatch) => {
-  let response = await profileAPI.updateUserPictureAPI(userPicture);
+  const response = await profileAPI.updateUserPictureAPI(userPicture);
   if (response.data.resultCode === 0) {
     dispatch(setUserPicture(response.data.data.photos));
+    debugger;
   }
 };
 
@@ -94,17 +103,17 @@ export const getUserStatus = (userId) => {
 };
 
 export const updateUserStatus = (status) => async (dispatch) => {
-  let response = await profileAPI.updateUsersStatusAPI(status);
+  const response = await profileAPI.updateUsersStatusAPI(status);
   if (response.data.resultCode === 0) {
     dispatch(setUserStatus(status));
   }
 };
 
 export const updateOwnersProfile = (dataDescription) => async (dispatch) => {
-  let response = await profileAPI.updateOwnersProfileAPI(dataDescription);
-  console.log(response);
+  const response = await profileAPI.updateOwnersProfileAPI(dataDescription);
+  console.log(dataDescription);
   if (response.data.resultCode === 0) {
-    dispatch(updateOwnersProfile);
+    dispatch(setOwnersProfile(dataDescription));
   }
 };
 

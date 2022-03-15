@@ -32,7 +32,9 @@ const Profile = (props) => {
   return (
     <div>
       <ProfileInfo
-        isOwnersUserPage={props.match.params.userId === String(authorizedUserId)}
+        isOwnersUserPage={
+          props.match.params.userId === String(authorizedUserId)
+        }
       />
       <MyPosts />
     </div>
