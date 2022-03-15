@@ -3,7 +3,6 @@ import s from "./Header.module.css";
 import noPhoto from "../../assets/images/nophoto.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/auth-reducer";
-import Preloader from "../Common/Preloader/Preloader";
 
 const Header = () => {
   const { isAuth, userLogin } = useSelector((state) => state.auth);
@@ -31,7 +30,9 @@ const Header = () => {
         ) : (
           <NavLink to="/login">Login</NavLink>
         )}
-        {profile ? <img src={isAuth ? profile.photos.small : noPhoto} alt="#" /> : <Preloader />}
+        {isAuth && (
+          <img src={profile ? profile.photos.small : noPhoto} alt="#" />
+        )}
       </div>
     </header>
   );

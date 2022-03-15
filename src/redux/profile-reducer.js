@@ -90,7 +90,6 @@ export const updateUserPicture = (userPicture) => async (dispatch) => {
   const response = await profileAPI.updateUserPictureAPI(userPicture);
   if (response.data.resultCode === 0) {
     dispatch(setUserPicture(response.data.data.photos));
-    debugger;
   }
 };
 
@@ -114,6 +113,8 @@ export const updateOwnersProfile = (dataDescription) => async (dispatch) => {
   console.log(dataDescription);
   if (response.data.resultCode === 0) {
     dispatch(setOwnersProfile(dataDescription));
+  } else {
+    return Promise.reject(response.data.messages[0]);
   }
 };
 

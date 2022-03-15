@@ -13,7 +13,7 @@ const ProfileInfo = ({ isOwnersUserPage }) => {
   const isOwner = useSelector((state) => state.profilePage.isOwner);
 
   const [editMode, setEditMode] = useState(false);
-  debugger;
+ 
   if (!profile) {
     return <Preloader />;
   }
@@ -45,7 +45,6 @@ const ProfileData = ({
   isOwnersUserPage,
   jumpToEditMode,
 }) => {
-  debugger;
   return (
     <div className={s.descriptionBlock}>
       <div className={s.descriptionItem}>

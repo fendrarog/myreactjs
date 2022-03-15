@@ -3,8 +3,10 @@ import noPhoto from "../../../assets/images/nophoto.jpg";
 import ProfileStatus from "./ProfileStatus";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { updateOwnersProfile } from "../../../redux/profile-reducer";
-import AddUserPictureForm from "./AddUserPictureForm";
+import {
+  updateOwnersProfile,
+  updateUserPicture,
+} from "../../../redux/profile-reducer";
 
 const ProfileDataForm = ({
   profile,
@@ -13,29 +15,38 @@ const ProfileDataForm = ({
   jumpToNonEditMode,
 }) => {
   const dispatch = useDispatch();
-
+  const { photos, ...rest } = profile;
   const { register, handleSubmit } = useForm({
-    defaultValues: { ...profile },
+    defaultValues: { ...rest },
   });
-  const onSubmit = (data) => {
-    console.log(data);
+
+  const onSubmit = async (data) => {
+    const { userPicture, ...rest } = data;
+    await dispatch(updateOwnersProfile(rest));
     jumpToNonEditMode();
-    dispatch(updateOwnersProfile(data));
   };
 
   return (
     <div className={s.descriptionBlock}>
       <div className={s.descriptionItem}>
         <img
-          src={profile.photos.large ? profile.photos.large : noPhoto}
+          src={photos.large ? photos.large : noPhoto}
           alt="#"
           className={s.photoProfile}
         />
       </div>
-      <div className={s.descriptionItem}>
-        <AddUserPictureForm />
-      </div>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <div className={s.descriptionItem}>
+          <input
+            type="file"
+            {...register("userPicture", {
+              onChange: (e) => {
+                dispatch(updateUserPicture(e.target.files[0]));
+              },
+            })}
+            className={s.customFileInput}
+          />
+        </div>
         <div className={s.descriptionItem}>
           <input {...register("fullName")} placeholder="Full name" />
         </div>
