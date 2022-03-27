@@ -5,8 +5,8 @@ const DELETE_POST = "DELETE_POST";
 const SET_USER_PROFILE = "SET_USER_PROFILE";
 const SET_USER_STATUS = "SET_USER_STATUS";
 const SET_USER_PICTURE = "SET_USER_PICTURE";
-const TOGGLE_IS_OWNER = "TOGGLE_IS_OWNER";
 const SET_OWNERS_PROFILE = "SET_OWNERS_PROFILE";
+const SET_LOGIN_PICTURE = "SET_LOGIN_PICTURE";
 
 let initialState = {
   postsData: [
@@ -18,11 +18,12 @@ let initialState = {
   profile: null,
   status: "",
   isOwner: false,
+  ownerPhoto: null,
 };
 
 const profileReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_POST: {
+    case ADD_POST:
       return {
         ...state,
         postsData: [
@@ -30,42 +31,61 @@ const profileReducer = (state = initialState, action) => {
           { id: 5, message: action.newPost, likesCount: 0 },
         ],
       };
-    }
-    case DELETE_POST: {
+
+    case DELETE_POST:
       return {
         ...state,
         postsData: state.postsData.filter((p) => p.id !== action.postId),
       };
-    }
-    case SET_USER_PROFILE: {
-      return { ...state, profile: action.profile };
-    }
-    case SET_USER_STATUS: {
-      return { ...state, status: action.status };
-    }
-    case SET_USER_PICTURE: {
-      return { ...state, profile: { ...state.profile, photos: action.photo } };
-    }
-    case TOGGLE_IS_OWNER: {
-      return { ...state, isOwner: action.isOwner };
-    }
-    case SET_OWNERS_PROFILE: {
+
+    case SET_USER_PROFILE:
+      debugger;
+      if (action.isOwner) {
+        return {
+          ...state,
+          ...action.payload,
+          ownerPhoto: action.profile.photos,
+        };
+      } else {
+        return {
+          ...state,
+          ...action.payload,
+        };
+      }
+
+    case SET_USER_PICTURE:
+      debugger;
+      return {
+        ...state,
+        ownerPhoto: action.photo,
+        profile: { ...state.profile, photos: action.photo },
+      };
+
+    case SET_OWNERS_PROFILE:
+      debugger;
       return { ...state, profile: { ...state.profile, ...action.payload } };
-    }
+
+    case SET_LOGIN_PICTURE:
+    case SET_USER_STATUS:
+      return { ...state, ...action.payload };
+
     default:
       return state;
   }
 };
 
-export const toggleIsOwner = (isOwner) => ({ type: TOGGLE_IS_OWNER, isOwner });
+export const setLoginPicture = (photo) => ({
+  type: SET_LOGIN_PICTURE,
+  payload: { ownerPhoto: photo },
+});
 
 export const addPost = (newPost) => ({ type: ADD_POST, newPost });
 
 export const deletePost = (postId) => ({ type: DELETE_POST, postId });
 
-export const setUserProfile = (profile) => ({
+export const setUserProfile = (profile, isOwnerProfile) => ({
   type: SET_USER_PROFILE,
-  profile,
+  payload: { profile, isOwner: isOwnerProfile },
 });
 
 export const setUserPicture = (photo) => ({
@@ -73,17 +93,28 @@ export const setUserPicture = (photo) => ({
   photo,
 });
 
-export const setUserStatus = (status) => ({ type: SET_USER_STATUS, status });
+export const setUserStatus = (status) => ({
+  type: SET_USER_STATUS,
+  payload: { status },
+});
 
 export const setOwnersProfile = (payload) => ({
   type: SET_OWNERS_PROFILE,
   payload: payload,
 });
 
-export const getUserProfile = (userId) => async (dispatch) => {
+export const getUserProfile = (userId) => async (dispatch, getState) => {
+  const authorizedUserId = getState().auth.userId;
   const response = await usersAPI.getUsersProfileAPI(userId);
+  debugger;
   console.log(response);
-  dispatch(setUserProfile(response.data));
+  dispatch(setUserProfile(response.data, Number(userId) === authorizedUserId));
+  debugger;
+};
+
+export const getLoginPicture = (userId) => async (dispatch) => {
+  const response = await usersAPI.getUsersProfileAPI(userId);
+  dispatch(setLoginPicture(response.data.photos));
 };
 
 export const updateUserPicture = (userPicture) => async (dispatch) => {
@@ -102,9 +133,13 @@ export const getUserStatus = (userId) => {
 };
 
 export const updateUserStatus = (status) => async (dispatch) => {
-  const response = await profileAPI.updateUsersStatusAPI(status);
-  if (response.data.resultCode === 0) {
-    dispatch(setUserStatus(status));
+  try {
+    const response = await profileAPI.updateUsersStatusAPI(status);
+    if (response.data.resultCode === 0) {
+      dispatch(setUserStatus(status));
+    }
+  } catch {
+    alert("Couldn't update user status");
   }
 };
 

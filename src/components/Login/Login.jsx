@@ -5,20 +5,18 @@ import { Redirect } from "react-router-dom";
 import { login } from "../../redux/auth-reducer";
 
 const Login = () => {
-  const isAuth = useSelector((state) => state.auth.isAuth);
+  const { captchaUrl, isAuth } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const {
     register,
     formState: { errors, isValid },
     handleSubmit,
-    reset,
   } = useForm({
     mode: "onChange",
   });
 
   const onSubmit = (data) => {
-    dispatch(login(data.login, data.password, data.rememberMe));
-    reset();
+    dispatch(login(data.login, data.password, data.rememberMe, data.captcha));
   };
 
   if (isAuth) {
@@ -62,6 +60,16 @@ const Login = () => {
           Remember me
           <input {...register("rememberMe")} type="checkbox" />
         </label>
+        {captchaUrl && (
+          <div>
+            <div>
+              <img src={captchaUrl} alt="#" />
+            </div>
+            <div>
+              <input type="text" {...register("captcha", { required: true })} />
+            </div>
+          </div>
+        )}
         <div>
           <input type="submit" disabled={!isValid} />
         </div>

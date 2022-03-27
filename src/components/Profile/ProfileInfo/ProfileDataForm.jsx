@@ -8,12 +8,7 @@ import {
   updateUserPicture,
 } from "../../../redux/profile-reducer";
 
-const ProfileDataForm = ({
-  profile,
-  isOwner,
-  isOwnersUserPage,
-  jumpToNonEditMode,
-}) => {
+const ProfileDataForm = ({ profile, isOwner, jumpToNonEditMode }) => {
   const dispatch = useDispatch();
   const { photos, ...rest } = profile;
   const { register, handleSubmit } = useForm({
@@ -81,7 +76,7 @@ const ProfileDataForm = ({
         </div>
       </form>
       <div className={s.descriptionItem}>
-        <ProfileStatus isOwner={isOwner} isOwnersUserPage={isOwnersUserPage} />
+        <ProfileStatus isOwner={isOwner} />
       </div>
     </div>
   );

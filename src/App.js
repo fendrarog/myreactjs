@@ -16,6 +16,8 @@ import Login from "./components/Login/Login";
 import { useEffect } from "react";
 import { Suspense } from "react";
 import { withBrowserRouterNProvider } from "./hoc/withBrowserRouterNProvider";
+import { Switch } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 const Music = React.lazy(() => import("./components/Music/Music"));
 const Settings = React.lazy(() => import("./components/Settings/Settings"));
@@ -38,19 +40,25 @@ const App = () => {
       <Header />
       <Navbar />
       <div className="app-wrapper-content">
-        <Route path="/profile/:userId?" render={() => <Profile />} />
-        <Route path="/dialogs" render={() => <Dialogs />} />
-        <Route path="/news" render={() => <News />} />
-        <Suspense fallback={<div>This is suspense loading...</div>}>
-          <Route path="/music" render={() => <Music />} />
-          <Route path="/settings" render={() => <Settings />} />
-          <Route path="/users" render={() => <Users />} />
-        </Suspense>
-        <Route path="/login" render={() => <Login />} />
+        <Switch>
+          <Route exact path="/" render={() => <Redirect to="/profile" />} />
+          <Route path="/login" render={() => <Login />} />
+          <Route path="/profile/:userId?" render={() => <Profile />} />
+          <Route path="/dialogs" render={() => <Dialogs />} />
+          <Route path="/news/lol/kek" render={() => <div>news LOL KEK</div>} />
+          <Route path="/news/lol" render={() => <div>news LOL</div>} />
+          <Route path="/news" render={() => <News />} />
+          <Suspense fallback={<div>This is suspense loading...</div>}>
+            <Route path="/music" render={() => <Music />} />
+            <Route path="/settings" render={() => <Settings />} />
+            <Route path="/users" render={() => <Users />} />
+          </Suspense>
+          <Route path="*" render={() => <div>404 NOT FOUND</div>} />
+        </Switch>
       </div>
-    </div>
-  );
-};
+    </div> // 404 PAGE NOT WORK WITH <SWITCH>
+  ); // Redirect to="/profile" WITHOUT EXACT NOT WORK
+}; // ProfilePage loading when logout and return status code 400
 
 export default withBrowserRouterNProvider(App);
 

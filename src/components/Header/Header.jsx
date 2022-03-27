@@ -3,13 +3,21 @@ import s from "./Header.module.css";
 import noPhoto from "../../assets/images/nophoto.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/auth-reducer";
+import { useEffect } from "react";
+import { getLoginPicture } from "../../redux/profile-reducer";
 
 const Header = () => {
   const { isAuth, userLogin } = useSelector((state) => state.auth);
-
-  const profile = useSelector((state) => state.profilePage.profile);
-
+  const ownerPhoto = useSelector((state) => state.profilePage.ownerPhoto);
+  const authorizedUserId = useSelector((state) => state.auth.userId);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!ownerPhoto) {
+      const userId = authorizedUserId;
+      dispatch(getLoginPicture(userId));
+    }
+  }, [ownerPhoto, authorizedUserId, dispatch]);
 
   return (
     <header className={s.header}>
@@ -31,7 +39,7 @@ const Header = () => {
           <NavLink to="/login">Login</NavLink>
         )}
         {isAuth && (
-          <img src={profile ? profile.photos.small : noPhoto} alt="#" />
+          <img src={ownerPhoto ? ownerPhoto.small : noPhoto} alt="#" />
         )}
       </div>
     </header>

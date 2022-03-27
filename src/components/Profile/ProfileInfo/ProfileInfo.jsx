@@ -13,7 +13,7 @@ const ProfileInfo = ({ isOwnersUserPage }) => {
   const isOwner = useSelector((state) => state.profilePage.isOwner);
 
   const [editMode, setEditMode] = useState(false);
- 
+
   if (!profile) {
     return <Preloader />;
   }
@@ -24,14 +24,12 @@ const ProfileInfo = ({ isOwnersUserPage }) => {
         <ProfileDataForm
           profile={profile}
           isOwner={isOwner}
-          isOwnersUserPage={isOwnersUserPage}
           jumpToNonEditMode={() => setEditMode(false)}
         />
       ) : (
         <ProfileData
           profile={profile}
           isOwner={isOwner}
-          isOwnersUserPage={isOwnersUserPage}
           jumpToEditMode={() => setEditMode(true)}
         />
       )}
@@ -39,12 +37,7 @@ const ProfileInfo = ({ isOwnersUserPage }) => {
   );
 };
 
-const ProfileData = ({
-  profile,
-  isOwner,
-  isOwnersUserPage,
-  jumpToEditMode,
-}) => {
+const ProfileData = ({ profile, isOwner, jumpToEditMode }) => {
   return (
     <div className={s.descriptionBlock}>
       <div className={s.descriptionItem}>
@@ -85,13 +78,13 @@ const ProfileData = ({
           );
         })}
       </div>
-      {(isOwner || isOwnersUserPage) && (
+      {isOwner && (
         <div className={s.descriptionItem}>
           <button onClick={jumpToEditMode}>Edit data</button>
         </div>
       )}
       <div className={s.descriptionItem}>
-        <ProfileStatus isOwner={isOwner} isOwnersUserPage={isOwnersUserPage} />
+        <ProfileStatus isOwner={isOwner} />
       </div>
     </div>
   );
