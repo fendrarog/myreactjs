@@ -1,5 +1,5 @@
-import React from "react";
-import reactDom from "react-dom";
+import * as React from "react";
+import * as reactDom from "react-dom";
 import reportWebVitals from "./reportWebVitals";
 import App from "./App";
 
