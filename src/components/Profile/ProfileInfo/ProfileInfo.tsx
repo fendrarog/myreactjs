@@ -7,10 +7,16 @@ import ProfileStatus from "./ProfileStatus";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import ProfileDataForm from "./ProfileDataForm";
+import { CombinedStateType } from "../../../redux/redux-store";
+import { ProfileType } from "../../../types/types";
 
-const ProfileInfo = ({ isOwnersUserPage }) => {
-  const profile = useSelector((state) => state.profilePage.profile);
-  const isOwner = useSelector((state) => state.profilePage.isOwner);
+const ProfileInfo: React.FC<{}> = () => {
+  const profile = useSelector(
+    (state: CombinedStateType) => state.profilePage.profile
+  );
+  const isOwner = useSelector(
+    (state: CombinedStateType) => state.profilePage.isOwner
+  );
 
   const [editMode, setEditMode] = useState(false);
 
@@ -37,7 +43,17 @@ const ProfileInfo = ({ isOwnersUserPage }) => {
   );
 };
 
-const ProfileData = ({ profile, isOwner, jumpToEditMode }) => {
+type PropsProfileDataType = {
+  profile: ProfileType;
+  isOwner: boolean;
+  jumpToEditMode: () => void;
+};
+
+const ProfileData: React.FC<PropsProfileDataType> = ({
+  profile,
+  isOwner,
+  jumpToEditMode,
+}) => {
   return (
     <div className={s.descriptionBlock}>
       <div className={s.descriptionItem}>
@@ -90,7 +106,12 @@ const ProfileData = ({ profile, isOwner, jumpToEditMode }) => {
   );
 };
 
-const Contact = ({ contactKey, contactValue }) => {
+type PropsContactType = {
+  contactKey: string;
+  contactValue: string;
+};
+
+const Contact: React.FC<PropsContactType> = ({ contactKey, contactValue }) => {
   return (
     <div className={s.contact}>
       <b>{contactKey}: </b>

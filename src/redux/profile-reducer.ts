@@ -171,9 +171,8 @@ export const getUserProfile =
     const response = await usersAPI.getUsersProfileAPI(userId);
     debugger;
     console.log(response);
-    dispatch(
-      setUserProfile(response.data, Number(userId) === authorizedUserId)
-    );
+    debugger;
+    dispatch(setUserProfile(response.data, userId === authorizedUserId));
     debugger;
   };
 

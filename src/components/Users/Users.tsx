@@ -13,13 +13,23 @@ import {
   selectPageSize,
 } from "../../redux/users-selectors";
 import Preloader from "../Common/Preloader/Preloader";
+import { UsersType } from "../../types/types";
+import { CombinedStateType } from "../../redux/redux-store";
 
-let Users = () => {
-  const currentPage = useSelector((state) => selectCurrentPage(state));
-  const pageSize = useSelector((state) => selectPageSize(state));
-  const users = useSelector((state) => selectHandleUsers(state));
-  const isFetching = useSelector((state) => selectIsFetching(state));
-  const followingProgress = useSelector((state) =>
+const Users: React.FC<{}> = () => {
+  const currentPage = useSelector((state: CombinedStateType) =>
+    selectCurrentPage(state)
+  );
+  const pageSize = useSelector((state: CombinedStateType) =>
+    selectPageSize(state)
+  );
+  const users = useSelector((state: CombinedStateType) =>
+    selectHandleUsers(state)
+  );
+  const isFetching = useSelector((state: CombinedStateType) =>
+    selectIsFetching(state)
+  );
+  const followingProgress = useSelector((state: CombinedStateType) =>
     selectFollowingProgress(state)
   );
   const dispatch = useDispatch();
@@ -35,7 +45,7 @@ let Users = () => {
     <div>
       <UsersPaginator currentPage={currentPage} pageSize={pageSize} />
 
-      {users.map((user) => (
+      {users.map((user: UsersType) => (
         <div key={user.id}>
           <span>
             <div>
@@ -52,7 +62,9 @@ let Users = () => {
             <div>
               {user.followed ? (
                 <button
-                  disabled={followingProgress.some((id) => id === user.id)}
+                  disabled={followingProgress.some(
+                    (id: number) => id === user.id
+                  )}
                   onClick={() => {
                     dispatch(unfollow(user.id));
                   }}
@@ -61,7 +73,9 @@ let Users = () => {
                 </button>
               ) : (
                 <button
-                  disabled={followingProgress.some((id) => id === user.id)}
+                  disabled={followingProgress.some(
+                    (id: number) => id === user.id
+                  )}
                   onClick={() => {
                     dispatch(follow(user.id));
                   }}

@@ -1,6 +1,7 @@
+import { CombinedStateType } from "./redux-store";
 import { createSelector } from "reselect";
 
-const selectUsers = (state) => {
+const selectUsers = (state: CombinedStateType) => {
   return state.usersPage.users;
 };
 
@@ -8,15 +9,15 @@ export const selectHandleUsers = createSelector(selectUsers, (users) => {
   return users.filter((u) => true);
 });
 
-export const selectPortionSize = (state) => {
+export const selectPortionSize = (state: CombinedStateType) => {
   return state.usersPage.portionSize;
 };
 
-export const selectPageSize = (state) => {
+export const selectPageSize = (state: CombinedStateType) => {
   return state.usersPage.pageSize;
 };
 
-export const selectTotalUsersCount = (state) => {
+export const selectTotalUsersCount = (state: CombinedStateType) => {
   return state.usersPage.totalUsersCount;
 };
 
@@ -28,18 +29,14 @@ export const selectPagesCount = createSelector(
   }
 );
 
-export const selectCurrentPage = (state) => {
+export const selectCurrentPage = (state: CombinedStateType) => {
   return state.usersPage.currentPage;
 };
 
-export const selectIsFetching = (state) => {
+export const selectIsFetching = (state: CombinedStateType) => {
   return state.usersPage.isFetching;
 };
 
-export const selectToggleIsFetching = (state) => {
-  return state.usersPage.toggleIsFetching;
-};
-
-export const selectFollowingProgress = (state) => {
+export const selectFollowingProgress = (state: CombinedStateType) => {
   return state.usersPage.followingProgress;
 };

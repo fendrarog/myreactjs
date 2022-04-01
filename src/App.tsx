@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route } from "react-router";
 import "./App.css";
@@ -13,18 +13,17 @@ import Profile from "./components/Profile/Profile";
 //import Users from "./components/Users/Users";
 import { initializeApp } from "./redux/app-reducer";
 import Login from "./components/Login/Login";
-import { useEffect } from "react";
-import { Suspense } from "react";
 import { withBrowserRouterNProvider } from "./hoc/withBrowserRouterNProvider";
 import { Switch } from "react-router-dom";
 import { Redirect } from "react-router-dom";
+import { CombinedStateType } from "./redux/redux-store";
 
 const Music = React.lazy(() => import("./components/Music/Music"));
 const Settings = React.lazy(() => import("./components/Settings/Settings"));
 const Users = React.lazy(() => import("./components/Users/Users"));
 
-const App = () => {
-  const init = useSelector((state) => state.app.init);
+const App: React.FC<{}> = () => {
+  const init = useSelector((state: CombinedStateType) => state.app.init);
   const dispatch = useDispatch();
 
   useEffect(() => {

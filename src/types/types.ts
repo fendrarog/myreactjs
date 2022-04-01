@@ -13,6 +13,7 @@ export type ContactsType = {
   mainLink: string;
 };
 export type ProfileType = {
+  aboutMe?: string;
   userId: number;
   lookingForAJob: boolean;
   lookingForAJobDescription: string;
@@ -25,7 +26,6 @@ export type PostsType = {
   message: string;
   likesCount: number;
 };
-
 export type UsersType = {
   id: number;
   name: string;

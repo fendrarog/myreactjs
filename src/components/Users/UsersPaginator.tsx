@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { CombinedStateType } from "../../redux/redux-store";
 import { requestUsers } from "../../redux/users-reducer";
 import {
   selectPagesCount,
@@ -8,12 +9,21 @@ import {
 } from "../../redux/users-selectors";
 import s from "./Users.module.css";
 
-const UsersPaginator = ({ currentPage, pageSize }) => {
-  const pagesCount = useSelector((state) => selectPagesCount(state));
-  const portionSize = useSelector((state) => selectPortionSize(state));
+type PropsType = {
+  currentPage: number;
+  pageSize: number;
+};
+
+const UsersPaginator: React.FC<PropsType> = ({ currentPage, pageSize }) => {
+  const pagesCount = useSelector((state: CombinedStateType) =>
+    selectPagesCount(state)
+  );
+  const portionSize = useSelector((state: CombinedStateType) =>
+    selectPortionSize(state)
+  );
   const dispatch = useDispatch();
 
-  let pages = [];
+  let pages: Array<number> = [];
   for (let i = 1; i <= pagesCount; i++) {
     pages.push(i);
   }
@@ -25,7 +35,7 @@ const UsersPaginator = ({ currentPage, pageSize }) => {
   let leftPortionPageNumber = (portionNumber - 1) * portionSize + 1;
   let rightPortionPageNumber = portionSize * portionNumber;
 
-  const onPageChange = (pageNumber) => {
+  const onPageChange = (pageNumber: number): void => {
     dispatch(requestUsers(pageNumber, pageSize));
   };
 

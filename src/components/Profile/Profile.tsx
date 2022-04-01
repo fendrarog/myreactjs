@@ -1,18 +1,27 @@
 //import MyPosts from "./MyPosts/MyPosts";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MyPosts from "./MyPosts/MyPosts";
 import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import { getUserProfile, getUserStatus } from "../../redux/profile-reducer";
 import { withRouter } from "react-router-dom";
 import { useCallback, useEffect } from "react";
-// import s from "./Profile.module.css";
+import { RouteComponentProps } from "react-router";
+import { CombinedStateType } from "../../redux/redux-store";
+//import s from "./Profile.module.css";
 
-const Profile = (props) => {
-  const authorizedUserId = useSelector((state) => state.auth.userId);
+type RouteParams = {
+  userId?: string;
+};
+
+const Profile: React.FC<RouteComponentProps<RouteParams>> = (props) => {
+  const authorizedUserId = useSelector(
+    (state: CombinedStateType) => state.auth.userId
+  );
   const dispatch = useDispatch();
 
   const refreshProfile = useCallback(() => {
-    let userId = props.match.params.userId;
+    let userId = Number(props.match.params.userId);
     if (!userId) {
       userId = authorizedUserId;
       if (!userId) {

@@ -11,6 +11,20 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
+        test: /\.css$/,
+        include: path.join(__dirname, "src/components"),
+        use: [
+          "style-loader",
+          {
+            loader: "typings-for-css-modules-loader",
+            options: {
+              modules: true,
+              namedExport: true,
+            },
+          },
+        ],
+      },
+      {
         test: /\.(js|jsx)$/,
         exclude: /(node_modules|bower_components)/,
         loader: "babel-loader",
@@ -20,7 +34,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".js"],
+    extensions: [".ts", ".tsx", ".js", ".css"],
   },
   output: {
     filename: "bundle.js",
