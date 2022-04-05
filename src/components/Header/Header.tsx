@@ -5,11 +5,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/auth-reducer";
 import { useEffect } from "react";
 import { getLoginPicture } from "../../redux/profile-reducer";
+import { CombinedStateType } from "../../redux/redux-store";
 
 const Header = () => {
-  const { isAuth, userLogin } = useSelector((state) => state.auth);
-  const ownerPhoto = useSelector((state) => state.profilePage.ownerPhoto);
-  const authorizedUserId = useSelector((state) => state.auth.userId);
+  const { isAuth, userLogin } = useSelector(
+    (state: CombinedStateType) => state.auth
+  );
+  const ownerPhoto = useSelector(
+    (state: CombinedStateType) => state.profilePage.ownerPhoto
+  );
+  const authorizedUserId = useSelector(
+    (state: CombinedStateType) => state.auth.userId
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {

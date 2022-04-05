@@ -1,3 +1,5 @@
+import { CombinedStateType } from "./redux-store";
+import { ThunkAction } from "redux-thunk";
 import {
   PostsType,
   ProfileType,
@@ -30,7 +32,7 @@ export type initialStateType = typeof initialState;
 
 const profileReducer = (
   state = initialState,
-  action: any
+  action: ActionsTypes
 ): initialStateType => {
   switch (action.type) {
     case ADD_POST:
@@ -49,16 +51,13 @@ const profileReducer = (
       };
 
     case SET_USER_PROFILE:
-      debugger;
-      if (action.isOwner) {
-        debugger;
+      if (action.payload.isOwner) {
         return {
           ...state,
           ...action.payload,
           ownerPhoto: action.payload.profile.photos,
         };
       } else {
-        debugger;
         return {
           ...state,
           ...action.payload,
@@ -85,6 +84,15 @@ const profileReducer = (
       return state;
   }
 };
+
+type ActionsTypes =
+  | SetLoginPictureType
+  | AddPostType
+  | DeletePostType
+  | SetUserProfileType
+  | SetUserPictureType
+  | SetUserStatusType
+  | SetOwnersProfileType;
 
 type SetLoginPictureType = {
   type: typeof SET_LOGIN_PICTURE;
@@ -165,51 +173,63 @@ export const setOwnersProfile = (
   payload,
 });
 
+type ThunkType = ThunkAction<
+  Promise<void>,
+  CombinedStateType,
+  unknown,
+  ActionsTypes
+>;
+
 export const getUserProfile =
-  (userId: number) => async (dispatch: any, getState: any) => {
+  (userId: number): ThunkType =>
+  async (dispatch, getState) => {
     const authorizedUserId = getState().auth.userId;
     const response = await usersAPI.getUsersProfileAPI(userId);
-    debugger;
     console.log(response);
-    debugger;
     dispatch(setUserProfile(response.data, userId === authorizedUserId));
-    debugger;
   };
 
-export const getLoginPicture = (userId: number) => async (dispatch: any) => {
-  const response = await usersAPI.getUsersProfileAPI(userId);
-  dispatch(setLoginPicture(response.data.photos));
-};
+export const getLoginPicture =
+  (userId: number): ThunkType =>
+  async (dispatch) => {
+    const response = await usersAPI.getUsersProfileAPI(userId);
+    dispatch(setLoginPicture(response.data.photos));
+  };
+
+//Типизация файла userPicture ----------------------------
 
 export const updateUserPicture =
-  (userPicture: any) => async (dispatch: any) => {
+  (userPicture: any): ThunkType =>
+  async (dispatch) => {
     const response = await profileAPI.updateUserPictureAPI(userPicture);
     if (response.data.resultCode === 0) {
       dispatch(setUserPicture(response.data.data.photos));
     }
   };
 
-export const getUserStatus = (userId: number) => {
-  return (dispatch: any) => {
-    profileAPI.getUsersStatusAPI(userId).then((response: any) => {
-      dispatch(setUserStatus(response.data));
-    });
+export const getUserStatus = (userId: number): ThunkType => {
+  return async (dispatch) => {
+    const response = await profileAPI.getUsersStatusAPI(userId);
+    dispatch(setUserStatus(response.data));
   };
 };
 
-export const updateUserStatus = (status: string) => async (dispatch: any) => {
-  try {
-    const response = await profileAPI.updateUsersStatusAPI(status);
-    if (response.data.resultCode === 0) {
-      dispatch(setUserStatus(status));
+export const updateUserStatus =
+  (status: string): ThunkType =>
+  async (dispatch) => {
+    try {
+      const response = await profileAPI.updateUsersStatusAPI(status);
+      if (response.data.resultCode === 0) {
+        dispatch(setUserStatus(status));
+      }
+    } catch {
+      alert("Couldn't update user status");
     }
-  } catch {
-    alert("Couldn't update user status");
-  }
-};
+  };
 
 export const updateOwnersProfile =
-  (dataDescription: SetOwnersProfilePayloadType) => async (dispatch: any) => {
+  (dataDescription: SetOwnersProfilePayloadType): ThunkType =>
+  async (dispatch) => {
     const response = await profileAPI.updateOwnersProfileAPI(dataDescription);
     console.log(dataDescription);
     if (response.data.resultCode === 0) {
