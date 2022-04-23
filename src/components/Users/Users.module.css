@@ -1,3 +1,19 @@
+.usersBlock{
+  padding: 15px;
+}
+
+.usersItem{
+  margin-bottom: 15px;
+}
+
+.usersItemName {
+  font-size: 20px;
+}
+
+.usersItemStatus {
+  font-size: 16px;
+}
+
 .userPhoto {
   width: 70px;
   height: 70px;

@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { getLoginPicture } from "../../redux/profile-reducer";
 import { CombinedStateType } from "../../redux/redux-store";
 
-const Header = () => {
+const Header: React.FC<{}> = () => {
   const { isAuth, userLogin } = useSelector(
     (state: CombinedStateType) => state.auth
   );
@@ -46,7 +46,9 @@ const Header = () => {
           <NavLink to="/login">Login</NavLink>
         )}
         {isAuth && (
-          <img src={ownerPhoto ? ownerPhoto.small : noPhoto} alt="#" />
+          <NavLink to="/">
+            <img src={ownerPhoto ? ownerPhoto.small : noPhoto} alt="#" />
+          </NavLink>
         )}
       </div>
     </header>

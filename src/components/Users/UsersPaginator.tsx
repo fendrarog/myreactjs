@@ -1,26 +1,33 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CombinedStateType } from "../../redux/redux-store";
 import { requestUsers } from "../../redux/users-reducer";
-import {
-  selectPagesCount,
-  selectPortionSize,
-} from "../../redux/users-selectors";
+import { selectPagesCount } from "../../redux/users-selectors";
 import s from "./Users.module.css";
 
 type PropsType = {
   currentPage: number;
   pageSize: number;
+  isFriends: null | boolean;
+  term?: string;
+  portionNumber: number;
+  portionSize: number;
+  setPortionNumber: (n: number) => void;
 };
 
-const UsersPaginator: React.FC<PropsType> = ({ currentPage, pageSize }) => {
+const UsersPaginator: React.FC<PropsType> = ({
+  currentPage,
+  pageSize,
+  isFriends,
+  term,
+  portionNumber,
+  portionSize,
+  setPortionNumber,
+}) => {
   const pagesCount = useSelector((state: CombinedStateType) =>
     selectPagesCount(state)
   );
-  const portionSize = useSelector((state: CombinedStateType) =>
-    selectPortionSize(state)
-  );
+
   const dispatch = useDispatch();
 
   let pages: Array<number> = [];
@@ -28,16 +35,25 @@ const UsersPaginator: React.FC<PropsType> = ({ currentPage, pageSize }) => {
     pages.push(i);
   }
 
-  const [portionNumber, setPortionNumber] = useState(
-    Math.ceil(currentPage / portionSize)
-  );
   let portionCount = Math.ceil(pagesCount / portionSize);
   let leftPortionPageNumber = (portionNumber - 1) * portionSize + 1;
   let rightPortionPageNumber = portionSize * portionNumber;
 
-  const onPageChange = (pageNumber: number): void => {
-    dispatch(requestUsers(pageNumber, pageSize));
+  const onPageChange = {
+    onCommonPageChange: (pageNumber: number) => {
+      dispatch(requestUsers(pageNumber, pageSize, isFriends));
+    },
+    onTermPageChange: (pageNumber: number) => {
+      dispatch(requestUsers(pageNumber, pageSize, isFriends, term));
+    },
   };
+
+  useEffect(() => {
+    if (portionNumber > portionCount && portionCount !== 0) {
+      //portionCount !== 0  Waiting loading pagesCount
+      setPortionNumber(portionCount);
+    }
+  }, [portionCount, portionNumber, setPortionNumber]);
 
   return (
     <div className={s.paginator}>
@@ -69,7 +85,9 @@ const UsersPaginator: React.FC<PropsType> = ({ currentPage, pageSize }) => {
               className={currentPage === p && s.selectedPage}
               key={p}
               onClick={() => {
-                onPageChange(p);
+                term === ""
+                  ? onPageChange["onCommonPageChange"](p)
+                  : onPageChange["onTermPageChange"](p);
               }}
             >
               {p}

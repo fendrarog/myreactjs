@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import s from "./MyPosts.module.css";
 import Post from "./Post/Post";
-import { addPost } from "../../../redux/profile-reducer";
+import { actions } from "../../../redux/profile-reducer";
 
 const MyPosts = () => {
   const postsData = useSelector((state) => state.profilePage.postsData);
@@ -34,7 +34,7 @@ const AddPostForm = () => {
   } = useForm({ mode: "onChange" });
 
   const onSubmit = (data) => {
-    dispatch(addPost(data.postField));
+    dispatch(actions.addPost(data.postField));
     reset();
   };
 

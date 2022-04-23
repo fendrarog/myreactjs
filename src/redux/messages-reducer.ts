@@ -1,4 +1,4 @@
-const ADD_MESSAGE = "messagesPage/AddMessage";
+import { InferActionsTypes } from "./redux-store";
 
 let initialState = {
   messagesData: [
@@ -21,7 +21,36 @@ let initialState = {
     { id: 6, name: "Borovik" },
   ] as Array<DialogsType>,
 };
-export type initialStateType = typeof initialState;
+
+const messagesReducer = (
+  state = initialState,
+  action: ActionsTypes
+): initialStateType => {
+  switch (action.type) {
+    case "ADD_MESSAGE": {
+      return {
+        ...state,
+        messagesData: [...state.messagesData, action.payload],
+      };
+    }
+    default:
+      return state;
+  }
+};
+
+export const actions = {
+  addMessage: (newMessage: string) =>
+    ({
+      type: "ADD_MESSAGE",
+      payload: { id: 10, message: newMessage },
+    } as const),
+};
+
+export default messagesReducer;
+
+// -------- TYPES -------- TYPES -------- TYPES -------- TYPES -------- TYPES -------- TYPES -------- TYPES --------
+
+type initialStateType = typeof initialState;
 type MessagesType = {
   id: number;
   message: string;
@@ -30,33 +59,4 @@ type DialogsType = {
   id: number;
   name: string;
 };
-
-const messagesReducer = (
-  state = initialState,
-  action: ActionsTypes
-): initialStateType => {
-  switch (action.type) {
-    case ADD_MESSAGE: {
-      return {
-        ...state,
-        messagesData: [...state.messagesData, { id: 10, ...action.payload }],
-      };
-    }
-    default:
-      return state;
-  }
-};
-
-type ActionsTypes = AddMessageType;
-
-type AddMessageType = {
-  type: typeof ADD_MESSAGE;
-  payload: { message: string };
-};
-
-export const addMessage = (newMessage: string): AddMessageType => ({
-  type: ADD_MESSAGE,
-  payload: { message: newMessage },
-});
-
-export default messagesReducer;
+type ActionsTypes = InferActionsTypes<typeof actions>;

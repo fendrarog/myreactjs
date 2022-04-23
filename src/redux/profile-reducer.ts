@@ -1,20 +1,13 @@
-import { CombinedStateType } from "./redux-store";
-import { ThunkAction } from "redux-thunk";
+import { CommonThunkType, InferActionsTypes } from "./redux-store";
 import {
   PostsType,
   ProfileType,
   PhotosType,
-  ContactsType,
+  SetOwnersProfilePayloadType,
 } from "./../types/types";
-import { profileAPI, usersAPI } from "../api/api";
-
-const ADD_POST = "profilePage/AddPost";
-const DELETE_POST = "profilePage/DeletePost";
-const SET_USER_PROFILE = "profilePage/SetUserProfile";
-const SET_USER_STATUS = "profilePage/SetUserStatus";
-const SET_USER_PICTURE = "profilePage/SetUserPicture";
-const SET_OWNERS_PROFILE = "profilePage/SetOwnersProfile";
-const SET_LOGIN_PICTURE = "profilePage/SetLoginPicture";
+import { usersAPI } from "../api/users-api";
+import { profileAPI } from "../api/profile-api";
+import { ResultCodes } from "../api/api";
 
 let initialState = {
   postsData: [
@@ -24,18 +17,17 @@ let initialState = {
     { id: 4, message: "Ez katka", likesCount: 7 },
   ] as Array<PostsType>,
   profile: null as ProfileType | null,
-  status: "" as string,
-  isOwner: false as boolean,
+  status: "",
+  isOwner: false,
   ownerPhoto: null as PhotosType | null,
 };
-export type initialStateType = typeof initialState;
 
 const profileReducer = (
   state = initialState,
   action: ActionsTypes
 ): initialStateType => {
   switch (action.type) {
-    case ADD_POST:
+    case "ADD_POST":
       return {
         ...state,
         postsData: [
@@ -44,13 +36,13 @@ const profileReducer = (
         ],
       };
 
-    case DELETE_POST:
+    case "DELETE_POST":
       return {
         ...state,
         postsData: state.postsData.filter((p) => p.id !== action.postId),
       };
 
-    case SET_USER_PROFILE:
+    case "SET_USER_PROFILE":
       if (action.payload.isOwner) {
         return {
           ...state,
@@ -64,7 +56,7 @@ const profileReducer = (
         };
       }
 
-    case SET_USER_PICTURE:
+    case "SET_USER_PICTURE":
       debugger;
       return {
         ...state,
@@ -72,12 +64,12 @@ const profileReducer = (
         profile: { ...state.profile, photos: action.photos },
       };
 
-    case SET_OWNERS_PROFILE:
+    case "SET_OWNERS_PROFILE":
       debugger;
       return { ...state, profile: { ...state.profile, ...action.payload } };
 
-    case SET_LOGIN_PICTURE:
-    case SET_USER_STATUS:
+    case "SET_LOGIN_PICTURE":
+    case "SET_USER_STATUS":
       return { ...state, ...action.payload };
 
     default:
@@ -85,132 +77,77 @@ const profileReducer = (
   }
 };
 
-type ActionsTypes =
-  | SetLoginPictureType
-  | AddPostType
-  | DeletePostType
-  | SetUserProfileType
-  | SetUserPictureType
-  | SetUserStatusType
-  | SetOwnersProfileType;
-
-type SetLoginPictureType = {
-  type: typeof SET_LOGIN_PICTURE;
-  payload: { ownerPhoto: PhotosType };
+export const actions = {
+  setLoginPicture: (photo: PhotosType) =>
+    ({
+      type: "SET_LOGIN_PICTURE",
+      payload: { ownerPhoto: photo },
+    } as const),
+  addPost: (newPost: string) =>
+    ({
+      type: "ADD_POST",
+      newPost,
+    } as const),
+  deletePost: (postId: number) =>
+    ({
+      type: "DELETE_POST",
+      postId,
+    } as const),
+  setUserProfile: (profile: ProfileType, isOwnerProfile: boolean) =>
+    ({
+      type: "SET_USER_PROFILE",
+      payload: { profile, isOwner: isOwnerProfile },
+    } as const),
+  setUserPicture: (photos: PhotosType) =>
+    ({
+      type: "SET_USER_PICTURE",
+      photos,
+    } as const),
+  setUserStatus: (status: string) =>
+    ({
+      type: "SET_USER_STATUS",
+      payload: { status },
+    } as const),
+  setOwnersProfile: (payload: SetOwnersProfilePayloadType) =>
+    ({
+      type: "SET_OWNERS_PROFILE",
+      payload,
+    } as const),
 };
-export const setLoginPicture = (photo: PhotosType): SetLoginPictureType => ({
-  type: SET_LOGIN_PICTURE,
-  payload: { ownerPhoto: photo },
-});
-
-type AddPostType = {
-  type: typeof ADD_POST;
-  newPost: string;
-};
-export const addPost = (newPost: string): AddPostType => ({
-  type: ADD_POST,
-  newPost,
-});
-
-type DeletePostType = {
-  type: typeof DELETE_POST;
-  postId: number;
-};
-export const deletePost = (postId: number): DeletePostType => ({
-  type: DELETE_POST,
-  postId,
-});
-
-type SetUserProfilePayloadType = {
-  profile: ProfileType;
-  isOwner: boolean;
-};
-type SetUserProfileType = {
-  type: typeof SET_USER_PROFILE;
-  payload: SetUserProfilePayloadType;
-};
-export const setUserProfile = (
-  profile: ProfileType,
-  isOwnerProfile: boolean
-): SetUserProfileType => ({
-  type: SET_USER_PROFILE,
-  payload: { profile, isOwner: isOwnerProfile },
-});
-
-type SetUserPictureType = {
-  type: typeof SET_USER_PICTURE;
-  photos: PhotosType;
-};
-export const setUserPicture = (photos: PhotosType): SetUserPictureType => ({
-  type: SET_USER_PICTURE,
-  photos,
-});
-
-type SetUserStatusType = {
-  type: typeof SET_USER_STATUS;
-  payload: { status: string };
-};
-export const setUserStatus = (status: string): SetUserStatusType => ({
-  type: SET_USER_STATUS,
-  payload: { status },
-});
-
-type SetOwnersProfilePayloadType = {
-  userId: number;
-  lookingForAJob: boolean;
-  lookingForAJobDescription: string;
-  fullName: string;
-  contacts: ContactsType;
-};
-type SetOwnersProfileType = {
-  type: typeof SET_OWNERS_PROFILE;
-  payload: SetOwnersProfilePayloadType;
-};
-export const setOwnersProfile = (
-  payload: SetOwnersProfilePayloadType
-): SetOwnersProfileType => ({
-  type: SET_OWNERS_PROFILE,
-  payload,
-});
-
-type ThunkType = ThunkAction<
-  Promise<void>,
-  CombinedStateType,
-  unknown,
-  ActionsTypes
->;
 
 export const getUserProfile =
   (userId: number): ThunkType =>
   async (dispatch, getState) => {
     const authorizedUserId = getState().auth.userId;
-    const response = await usersAPI.getUsersProfileAPI(userId);
-    console.log(response);
-    dispatch(setUserProfile(response.data, userId === authorizedUserId));
+    const userProfileData = await usersAPI.getUsersProfileAPI(userId);
+    console.log(userProfileData);
+    dispatch(
+      actions.setUserProfile(userProfileData, userId === authorizedUserId)
+    );
   };
 
 export const getLoginPicture =
   (userId: number): ThunkType =>
   async (dispatch) => {
-    const response = await usersAPI.getUsersProfileAPI(userId);
-    dispatch(setLoginPicture(response.data.photos));
+    const userProfileData = await usersAPI.getUsersProfileAPI(userId);
+    dispatch(actions.setLoginPicture(userProfileData.photos));
   };
 
 //Типизация файла userPicture ----------------------------
 
 export const updateUserPicture =
-  (userPicture: any): ThunkType =>
+  (userPicture: File): ThunkType =>
   async (dispatch) => {
-    const response = await profileAPI.updateUserPictureAPI(userPicture);
-    if (response.data.resultCode === 0) {
-      dispatch(setUserPicture(response.data.data.photos));
+    const dataPhotoSave = await profileAPI.updateUserPictureAPI(userPicture);
+    if (dataPhotoSave.resultCode === 0) {
+      dispatch(actions.setUserPicture(dataPhotoSave.data.photos));
     }
   };
 
 export const getUserStatus = (userId: number): ThunkType => {
   return async (dispatch) => {
-    const response = await profileAPI.getUsersStatusAPI(userId);
-    dispatch(setUserStatus(response.data));
+    const userStatusData = await profileAPI.getUsersStatusAPI(userId);
+    dispatch(actions.setUserStatus(userStatusData));
   };
 };
 
@@ -218,11 +155,11 @@ export const updateUserStatus =
   (status: string): ThunkType =>
   async (dispatch) => {
     try {
-      const response = await profileAPI.updateUsersStatusAPI(status);
-      if (response.data.resultCode === 0) {
-        dispatch(setUserStatus(status));
+      const updateStatusData = await profileAPI.updateUsersStatusAPI(status);
+      if (updateStatusData.resultCode === ResultCodes.Success) {
+        dispatch(actions.setUserStatus(status));
       }
-    } catch {
+    } catch (errors) {
       alert("Couldn't update user status");
     }
   };
@@ -230,13 +167,22 @@ export const updateUserStatus =
 export const updateOwnersProfile =
   (dataDescription: SetOwnersProfilePayloadType): ThunkType =>
   async (dispatch) => {
-    const response = await profileAPI.updateOwnersProfileAPI(dataDescription);
+    const ownersProfileData = await profileAPI.updateOwnersProfileAPI(
+      dataDescription
+    );
+    debugger;
     console.log(dataDescription);
-    if (response.data.resultCode === 0) {
-      dispatch(setOwnersProfile(dataDescription));
+    if (ownersProfileData.resultCode === ResultCodes.Success) {
+      dispatch(actions.setOwnersProfile(dataDescription));
     } else {
-      return Promise.reject(response.data.messages[0]);
+      return Promise.reject(ownersProfileData.messages[0]);
     }
   };
 
 export default profileReducer;
+
+// -------- TYPES -------- TYPES -------- TYPES -------- TYPES -------- TYPES -------- TYPES -------- TYPES --------
+
+type initialStateType = typeof initialState;
+type ActionsTypes = InferActionsTypes<typeof actions>;
+type ThunkType = CommonThunkType<ActionsTypes>;

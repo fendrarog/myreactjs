@@ -1,21 +1,34 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+import React, { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { login } from "../../redux/auth-reducer";
+import { CombinedStateType } from "../../redux/redux-store";
 
-const Login = () => {
-  const { captchaUrl, isAuth } = useSelector((state) => state.auth);
+const Login: React.FC<{}> = () => {
+  const { captchaUrl, isAuth, userEmail, rememberMe } = useSelector(
+    (state: CombinedStateType) => state.auth
+  );
   const dispatch = useDispatch();
+
+  //const [checked, toggle] = useReducer((checked) => !checked, rememberMe);
+  const [checked, setChecked] = useState(rememberMe);
+
+  type LoginData = {
+    login: string;
+    password: string;
+    rememberMe: boolean;
+    captcha: string;
+  };
   const {
     register,
     formState: { errors, isValid },
     handleSubmit,
-  } = useForm({
+  } = useForm<LoginData>({
     mode: "onChange",
   });
 
-  const onSubmit = (data) => {
+  const onSubmit: SubmitHandler<LoginData> = (data) => {
     dispatch(login(data.login, data.password, data.rememberMe, data.captcha));
   };
 
@@ -37,6 +50,7 @@ const Login = () => {
                 message: "Минимум 5 символов.",
               },
             })}
+            defaultValue={userEmail ? userEmail : null}
           />
         </label>
         <div>{errors?.login && <p>{errors.login?.message || "Error!"}</p>}</div>
@@ -58,7 +72,15 @@ const Login = () => {
         </div>
         <label>
           Remember me
-          <input {...register("rememberMe")} type="checkbox" />
+          <input
+            type="checkbox"
+            {...register("rememberMe", {
+              onChange: () => {
+                setChecked(!checked);
+              },
+            })}
+            checked={checked}
+          />
         </label>
         {captchaUrl && (
           <div>

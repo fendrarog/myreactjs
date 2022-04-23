@@ -6,6 +6,10 @@
 
   .friendsItem {
     padding: 5px;
+    max-width: 60px;
+    text-align: center;
+    /* overflow-x: hidden; */
+    word-wrap: break-word;
   }
 
   .friendsItem a.activeLink {

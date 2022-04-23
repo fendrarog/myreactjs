@@ -21,6 +21,14 @@ export type ProfileType = {
   contacts: ContactsType;
   photos: PhotosType;
 };
+export type SetOwnersProfilePayloadType = {
+  aboutMe: string;
+  userId: number;
+  lookingForAJob: boolean;
+  lookingForAJobDescription: string;
+  fullName: string;
+  contacts: ContactsType;
+};
 export type PostsType = {
   id: number;
   message: string;
@@ -33,3 +41,4 @@ export type UsersType = {
   photos: PhotosType;
   followed: boolean;
 };
+

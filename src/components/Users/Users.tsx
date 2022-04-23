@@ -1,20 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import s from "./Users.module.css";
-import userPhoto from "../../assets/images/nophoto.jpg";
-import { NavLink } from "react-router-dom";
 import UsersPaginator from "./UsersPaginator";
 import { useDispatch, useSelector } from "react-redux";
-import { follow, requestUsers, unfollow } from "../../redux/users-reducer";
+import { actions, requestUsers } from "../../redux/users-reducer";
 import {
   selectCurrentPage,
   selectFollowingProgress,
   selectHandleUsers,
   selectIsFetching,
+  selectIsFriends,
   selectPageSize,
+  selectPortionSize,
+  selectTerm,
 } from "../../redux/users-selectors";
 import Preloader from "../Common/Preloader/Preloader";
-import { UsersType } from "../../types/types";
 import { CombinedStateType } from "../../redux/redux-store";
+import UsersFriendsToggle from "./UsersFriendsToggle";
+import UsersDisplay from "./UsersDisplay";
+import UsersTerm from "./UsersTerm";
 
 const Users: React.FC<{}> = () => {
   const currentPage = useSelector((state: CombinedStateType) =>
@@ -32,71 +35,79 @@ const Users: React.FC<{}> = () => {
   const followingProgress = useSelector((state: CombinedStateType) =>
     selectFollowingProgress(state)
   );
+  const isFriends = useSelector((state: CombinedStateType) =>
+    selectIsFriends(state)
+  );
+  const portionSize = useSelector((state: CombinedStateType) =>
+    selectPortionSize(state)
+  );
+  const term = useSelector((state: CombinedStateType) => selectTerm(state));
+  const isFriendsFromNavLink = useSelector(
+    (state: CombinedStateType) => state.usersPage.isFriendsFromNavLink
+  );
+
   const dispatch = useDispatch();
 
+  const [termState, setTermState] = useState(term);
+  const [isFriendsState, setIsFriendsState] = useState(isFriends);
+  const [currentPageState, setCurrentPageState] = useState(currentPage);
+  const [portionNumber, setPortionNumber] = useState(
+    Math.ceil(currentPage / portionSize)
+  );
+
+  const setFrdTgglInit = (isFrd: null | boolean) => {
+    setIsFriendsState(isFrd);
+    setCurrentPageState(1);
+    setPortionNumber(1);
+  };
+
   useEffect(() => {
-    dispatch(requestUsers(currentPage, pageSize));
-  }, [dispatch, currentPage, pageSize]);
+    if (isFriendsFromNavLink) {
+      setFrdTgglInit(isFriendsFromNavLink);
+      dispatch(actions.setIsFriendsFromNavLink(!isFriendsFromNavLink));
+    } else {
+      dispatch(
+        requestUsers(currentPageState, pageSize, isFriendsState, termState)
+      );
+    }
+    debugger;
+  }, [
+    dispatch,
+    currentPageState,
+    pageSize,
+    isFriendsState,
+    termState,
+    isFriendsFromNavLink,
+  ]);
 
-  if (isFetching) {
-    return <Preloader />;
-  }
   return (
-    <div>
-      <UsersPaginator currentPage={currentPage} pageSize={pageSize} />
-
-      {users.map((user: UsersType) => (
-        <div key={user.id}>
-          <span>
-            <div>
-              <NavLink to={"/profile/" + user.id}>
-                <img
-                  src={
-                    user.photos.small != null ? user.photos.small : userPhoto
-                  }
-                  alt="#"
-                  className={s.userPhoto}
-                />
-              </NavLink>
-            </div>
-            <div>
-              {user.followed ? (
-                <button
-                  disabled={followingProgress.some(
-                    (id: number) => id === user.id
-                  )}
-                  onClick={() => {
-                    dispatch(unfollow(user.id));
-                  }}
-                >
-                  Unfollow
-                </button>
-              ) : (
-                <button
-                  disabled={followingProgress.some(
-                    (id: number) => id === user.id
-                  )}
-                  onClick={() => {
-                    dispatch(follow(user.id));
-                  }}
-                >
-                  Follow
-                </button>
-              )}
-            </div>
-          </span>
-          <span>
-            <span>
-              <div>{user.name}</div>
-              <div>{user.status}</div>
-            </span>
-            <span>
-              <div>{"user.location.cityName"}</div>
-              <div>{"user.location.countryName"}</div>
-            </span>
-          </span>
-        </div>
-      ))}
+    <div className={s.usersBlock}>
+      <UsersTerm
+        setTermState={(t) => {
+          setTermState(t);
+          setPortionNumber(1);
+        }}
+      />
+      <UsersPaginator
+        isFriends={isFriends}
+        currentPage={currentPage}
+        pageSize={pageSize}
+        term={term}
+        portionSize={portionSize}
+        portionNumber={portionNumber}
+        setPortionNumber={(n) => {
+          setPortionNumber(n);
+        }}
+      />
+      <UsersFriendsToggle
+        isFriends={isFriendsState}
+        setFrdTgglInit={setFrdTgglInit}
+      />
+      {isFetching ? (
+        <Preloader />
+      ) : (
+        <UsersDisplay followingProgress={followingProgress} users={users} />
+      )}
     </div>
   );
 };

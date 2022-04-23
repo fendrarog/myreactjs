@@ -4,7 +4,7 @@ import DialogItem from "./DialogItem/DialogItem";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { addMessage } from "../../redux/messages-reducer";
+import { actions } from "../../redux/messages-reducer";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 
 const Dialogs = () => {
@@ -40,7 +40,7 @@ const AddMessageForm = () => {
   } = useForm({ mode: "onChange" });
 
   const onSubmit = (data) => {
-    dispatch(addMessage(data.messageField));
+    dispatch(actions.addMessage(data.messageField));
     reset();
   };
   return (

@@ -33,6 +33,14 @@ export const selectCurrentPage = (state: CombinedStateType) => {
   return state.usersPage.currentPage;
 };
 
+export const selectIsFriends = (state: CombinedStateType) => {
+  return state.usersPage.isFriends;
+};
+
+export const selectTerm = (state: CombinedStateType) => {
+  return state.usersPage.term;
+};
+
 export const selectIsFetching = (state: CombinedStateType) => {
   return state.usersPage.isFetching;
 };
