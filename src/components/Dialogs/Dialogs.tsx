@@ -2,14 +2,15 @@ import s from "./Dialogs.module.css";
 import Message from "./Message/Message";
 import DialogItem from "./DialogItem/DialogItem";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../redux/messages-reducer";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
+import { CombinedStateType } from "../../redux/redux-store";
 
-const Dialogs = () => {
+const Dialogs: React.FC = () => {
   const { dialogsData, messagesData } = useSelector(
-    (state) => state.messagesPage
+    (state: CombinedStateType) => state.messagesPage
   );
 
   let dialogsElements = dialogsData.map((d) => (
@@ -30,16 +31,21 @@ const Dialogs = () => {
   );
 };
 
-const AddMessageForm = () => {
+const AddMessageForm: React.FC = () => {
   const dispatch = useDispatch();
+
+  type LoginData = {
+    messageField: string;
+  };
+
   const {
     register,
     formState: { errors, isValid },
     handleSubmit,
     reset,
-  } = useForm({ mode: "onChange" });
+  } = useForm<LoginData>({ mode: "onChange" });
 
-  const onSubmit = (data) => {
+  const onSubmit: SubmitHandler<LoginData> = (data) => {
     dispatch(actions.addMessage(data.messageField));
     reset();
   };

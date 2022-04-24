@@ -45,6 +45,7 @@ const Users: React.FC<{}> = () => {
   const isFriendsFromNavLink = useSelector(
     (state: CombinedStateType) => state.usersPage.isFriendsFromNavLink
   );
+  const isAuth = useSelector((state: CombinedStateType) => state.auth.isAuth);
 
   const dispatch = useDispatch();
 
@@ -62,7 +63,7 @@ const Users: React.FC<{}> = () => {
   };
 
   useEffect(() => {
-    if (isFriendsFromNavLink) {
+    if (isFriendsFromNavLink && isAuth) {
       setFrdTgglInit(isFriendsFromNavLink);
       dispatch(actions.setIsFriendsFromNavLink(!isFriendsFromNavLink));
     } else {
@@ -78,6 +79,7 @@ const Users: React.FC<{}> = () => {
     isFriendsState,
     termState,
     isFriendsFromNavLink,
+    isAuth,
   ]);
 
   return (
@@ -100,6 +102,7 @@ const Users: React.FC<{}> = () => {
         }}
       />
       <UsersFriendsToggle
+        isAuth={isAuth}
         isFriends={isFriendsState}
         setFrdTgglInit={setFrdTgglInit}
       />

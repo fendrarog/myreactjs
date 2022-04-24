@@ -5,7 +5,7 @@ import { Redirect } from "react-router-dom";
 import { login } from "../../redux/auth-reducer";
 import { CombinedStateType } from "../../redux/redux-store";
 
-const Login: React.FC<{}> = () => {
+const Login: React.FC = () => {
   const { captchaUrl, isAuth, userEmail, rememberMe } = useSelector(
     (state: CombinedStateType) => state.auth
   );

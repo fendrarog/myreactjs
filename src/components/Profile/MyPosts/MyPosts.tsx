@@ -1,12 +1,15 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import s from "./MyPosts.module.css";
 import Post from "./Post/Post";
 import { actions } from "../../../redux/profile-reducer";
+import { CombinedStateType } from "../../../redux/redux-store";
 
-const MyPosts = () => {
-  const postsData = useSelector((state) => state.profilePage.postsData);
+const MyPosts: React.FC = () => {
+  const postsData = useSelector(
+    (state: CombinedStateType) => state.profilePage.postsData
+  );
 
   let postsElements = postsData.map((p) => (
     <Post key={p.id} message={p.message} likesCount={p.likesCount} />
@@ -23,17 +26,21 @@ const MyPosts = () => {
   );
 };
 
-const AddPostForm = () => {
+const AddPostForm: React.FC = () => {
   const dispatch = useDispatch();
+
+  type LoginData = {
+    postField: string;
+  };
 
   const {
     register,
     formState: { errors, isValid },
     handleSubmit,
     reset,
-  } = useForm({ mode: "onChange" });
+  } = useForm<LoginData>({ mode: "onChange" });
 
-  const onSubmit = (data) => {
+  const onSubmit: SubmitHandler<LoginData> = (data) => {
     dispatch(actions.addPost(data.postField));
     reset();
   };

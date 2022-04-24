@@ -1,23 +1,47 @@
 import s from "./ProfileInfo.module.css";
 import noPhoto from "../../../assets/images/nophoto.jpg";
 import ProfileStatus from "./ProfileStatus";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import {
   updateOwnersProfile,
   updateUserPicture,
 } from "../../../redux/profile-reducer";
+import { ContactsType, ProfileType } from "../../../types/types";
+import { ChangeEvent } from "react";
 
-const ProfileDataForm = ({ profile, isOwner, jumpToNonEditMode }) => {
+type PropsType = {
+  profile: ProfileType;
+  isOwner: boolean;
+  jumpToNonEditMode: () => void;
+};
+
+const ProfileDataForm: React.FC<PropsType> = ({
+  profile,
+  isOwner,
+  jumpToNonEditMode,
+}) => {
   const dispatch = useDispatch();
-  const { photos, ...rest } = profile;
-  const { register, handleSubmit } = useForm({
-    defaultValues: { ...rest },
+
+  const { photos, ...restProfile } = profile;
+
+  type LoginData = {
+    userPicture: File;
+    aboutMe: string;
+    userId: number;
+    lookingForAJob: boolean;
+    lookingForAJobDescription: string;
+    fullName: string;
+    contacts: ContactsType;
+  };
+
+  const { register, handleSubmit } = useForm<LoginData>({
+    defaultValues: { ...restProfile },
   });
 
-  const onSubmit = async (data) => {
-    const { userPicture, ...rest } = data;
-    await dispatch(updateOwnersProfile(rest));
+  const onSubmit: SubmitHandler<LoginData> = async (data) => {
+    const { userPicture, ...restProfile } = data;
+    await dispatch(updateOwnersProfile(restProfile));
     jumpToNonEditMode();
   };
 
@@ -35,7 +59,7 @@ const ProfileDataForm = ({ profile, isOwner, jumpToNonEditMode }) => {
           <input
             type="file"
             {...register("userPicture", {
-              onChange: (e) => {
+              onChange: (e: ChangeEvent<HTMLInputElement>) => {
                 dispatch(updateUserPicture(e.target.files[0]));
               },
             })}
@@ -62,7 +86,7 @@ const ProfileDataForm = ({ profile, isOwner, jumpToNonEditMode }) => {
         </div>
         <div className={s.descriptionItem}>
           <b>Contacts: </b>
-          {Object.keys(profile.contacts).map((key) => {
+          {Object.keys(profile.contacts).map((key: keyof ContactsType) => {
             return (
               <div key={key} className={s.contact}>
                 <b>{key} :</b>

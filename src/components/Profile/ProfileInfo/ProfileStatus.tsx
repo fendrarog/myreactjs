@@ -1,9 +1,16 @@
-import { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserStatus } from "../../../redux/profile-reducer";
+import { CombinedStateType } from "../../../redux/redux-store";
 
-const ProfileStatus = ({ isOwner }) => {
-  const statusProps = useSelector((state) => state.profilePage.status);
+type PropsType = {
+  isOwner: boolean;
+};
+
+const ProfileStatus: React.FC<PropsType> = ({ isOwner }) => {
+  const statusProps = useSelector(
+    (state: CombinedStateType) => state.profilePage.status
+  );
   const dispatch = useDispatch();
 
   const [editMode, setEditMode] = useState(false);
@@ -20,7 +27,7 @@ const ProfileStatus = ({ isOwner }) => {
     }
   };
 
-  const onStatusUserChange = (e) => {
+  const onStatusUserChange = (e: ChangeEvent<HTMLInputElement>) => {
     setStatusLocal(e.currentTarget.value);
   };
 

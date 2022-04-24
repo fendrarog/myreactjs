@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { CombinedStateType } from "../../../redux/redux-store";
@@ -8,15 +8,17 @@ import Preloader from "../../Common/Preloader/Preloader";
 import s from "./Friends.module.css";
 import FriendsItem from "./FriendsItem/FriendsItem";
 
-const Friends = () => {
+const Friends: React.FC = () => {
   const { friends: friendsData, isFetching } = useSelector(
     (state: CombinedStateType) => state.sidebar
   );
+  const isAuth = useSelector((state: CombinedStateType) => state.auth.isAuth);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getFriends());
-  }, [dispatch]);
+  }, [dispatch, isAuth]);
 
   let friendsElements = friendsData.map((f) => (
     <FriendsItem

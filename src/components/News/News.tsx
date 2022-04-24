@@ -1,7 +1,7 @@
-import s from "./News.module.css";
 import React, { useState } from "react";
+import s from "./News.module.css";
 
-const News = () => {
+const News: React.FC = () => {
   const [count, setCount] = useState(1);
   const [direction, setDirection] = useState("asc");
   /*   let counter = () => {
@@ -15,13 +15,13 @@ const News = () => {
   }; */
 
   const changeCountBy = {
-    asc: (count) => {
+    asc: (count: number) => {
       setCount(count + 1);
       if (count + 1 >= 10) {
         setDirection("desc");
       }
     },
-    desc: (count) => {
+    desc: (count: number) => {
       setCount(count - 1);
       if (count - 1 <= 1) {
         setDirection("asc");
@@ -40,14 +40,14 @@ const News = () => {
   }, 0);
   console.log(arrNumReduce);
 
-  const isPalindrome = (somePalindrome) => {
+  const isPalindrome = (somePalindrome: string) => {
     somePalindrome = somePalindrome.toLowerCase();
     return somePalindrome === [...somePalindrome].reverse().join("");
   };
   console.log(isPalindrome("lolalolka"));
 
   let parenthesesString = "(()))";
-  const isParentheses = (someParenthesesString) => {
+  const isParentheses = (someParenthesesString: any) => {
     debugger;
     const result = [...someParenthesesString].reduce((acc, cur) => {
       debugger;

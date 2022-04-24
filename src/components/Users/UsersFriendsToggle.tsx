@@ -2,11 +2,13 @@ import React from "react";
 import s from "./Users.module.css";
 
 type PropsType = {
+  isAuth: boolean;
   isFriends: null | boolean;
   setFrdTgglInit: (isFrd: null | boolean) => void;
 };
 
 const UsersFriendsToggle: React.FC<PropsType> = ({
+  isAuth,
   isFriends,
   setFrdTgglInit,
 }) => {
@@ -21,7 +23,7 @@ const UsersFriendsToggle: React.FC<PropsType> = ({
         Все ползователи
       </button>
       <button
-        disabled={isFriends}
+        disabled={isFriends || !isAuth}
         onClick={() => {
           setFrdTgglInit(true);
         }}
@@ -29,7 +31,7 @@ const UsersFriendsToggle: React.FC<PropsType> = ({
         Друзья
       </button>
       <button
-        disabled={isFriends === false}
+        disabled={isFriends === false || !isAuth}
         onClick={() => {
           setFrdTgglInit(false);
         }}

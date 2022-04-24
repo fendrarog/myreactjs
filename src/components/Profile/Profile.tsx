@@ -8,6 +8,7 @@ import { withRouter } from "react-router-dom";
 import { useCallback, useEffect } from "react";
 import { RouteComponentProps } from "react-router";
 import { CombinedStateType } from "../../redux/redux-store";
+import Preloader from "../Common/Preloader/Preloader";
 //import s from "./Profile.module.css";
 
 type RouteParams = {
@@ -18,6 +19,8 @@ const Profile: React.FC<RouteComponentProps<RouteParams>> = (props) => {
   const authorizedUserId = useSelector(
     (state: CombinedStateType) => state.auth.userId
   );
+  const isAuth = useSelector((state: CombinedStateType) => state.auth.isAuth);
+
   const dispatch = useDispatch();
 
   const refreshProfile = useCallback(() => {
@@ -35,6 +38,10 @@ const Profile: React.FC<RouteComponentProps<RouteParams>> = (props) => {
   useEffect(() => {
     refreshProfile();
   }, [refreshProfile]);
+
+  if (!isAuth) {
+    return <Preloader />;
+  }
 
   return (
     <div>

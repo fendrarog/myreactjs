@@ -3,12 +3,14 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import store from "../redux/redux-store";
 
-export const withBrowserRouterNProvider = (Component) => {
-  const WrapComponent = (props) => {
+export const withBrowserRouterNProvider = <WCP,>(
+  WrappedComponent: React.ComponentType<WCP>
+) => {
+  const WrapComponent = (props: WCP) => {
     return (
       <BrowserRouter>
         <Provider store={store}>
-          <Component {...props} />
+          <WrappedComponent {...props} />
         </Provider>
       </BrowserRouter>
     );

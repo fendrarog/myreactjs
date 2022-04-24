@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { getLoginPicture } from "../../redux/profile-reducer";
 import { CombinedStateType } from "../../redux/redux-store";
 
-const Header: React.FC<{}> = () => {
+const Header: React.FC = () => {
   const { isAuth, userLogin } = useSelector(
     (state: CombinedStateType) => state.auth
   );

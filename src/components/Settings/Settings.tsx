@@ -1,7 +1,7 @@
 // import s from './Settings.module.css';
 
-const Settings = (props) => {
-  const luckyСompute = (num) => {
+const Settings: React.FC = () => {
+  const luckyСompute = (num: number) => {
     let arr = [...String(num)];
     let luckyObj = arr.reduce((acc, cur) => {
       acc[cur] = acc[cur] ? acc[cur] + 1 : 1;
