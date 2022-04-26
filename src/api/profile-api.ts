@@ -1,8 +1,4 @@
-import {
-  PhotosType,
-  ProfileType,
-  SetOwnersProfilePayloadType,
-} from "./../types/types";
+import { PhotosType, ProfileType } from "./../types/types";
 import { CommonResponseType, instance } from "./api";
 
 export const profileAPI = {
@@ -32,7 +28,7 @@ export const profileAPI = {
     });
     return data;
   },
-  async updateOwnersProfileAPI(dataDescription: SetOwnersProfilePayloadType) {
+  async updateOwnersProfileAPI(dataDescription: ProfileType) {
     const { data } = await instance.put<CommonResponseType>(
       `profile`,
       dataDescription

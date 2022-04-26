@@ -13,6 +13,7 @@ type PropsType = {
   portionNumber: number;
   portionSize: number;
   setPortionNumber: (n: number) => void;
+  className?: string | false;
 };
 
 const UsersPaginator: React.FC<PropsType> = ({
@@ -82,7 +83,7 @@ const UsersPaginator: React.FC<PropsType> = ({
         .map((p) => {
           return (
             <span
-              className={currentPage === p && s.selectedPage}
+              className={currentPage === p ? s.selectedPage : undefined}
               key={p}
               onClick={() => {
                 term === ""

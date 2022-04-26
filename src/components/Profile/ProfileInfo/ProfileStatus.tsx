@@ -21,7 +21,9 @@ const ProfileStatus: React.FC<PropsType> = ({ isOwner }) => {
   }, [statusProps]);
 
   const toggleActivateEditMode = () => {
-    setEditMode(!editMode);
+    if (isOwner) {
+      setEditMode(!editMode);
+    }
     if (editMode) {
       dispatch(updateUserStatus(statusLocal));
     }
@@ -36,7 +38,7 @@ const ProfileStatus: React.FC<PropsType> = ({ isOwner }) => {
       {!editMode ? (
         <div>
           <b>Status: </b>
-          <span onClick={isOwner && toggleActivateEditMode}>
+          <span onClick={toggleActivateEditMode}>
             {statusProps || "------"}
           </span>
         </div>

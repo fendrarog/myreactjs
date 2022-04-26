@@ -1,17 +1,9 @@
+import { UsersType } from "../types/types";
 import { instance, CommonResponseType } from "./api";
-import { PhotosType } from "../types/types";
 import { profileAPI } from "./profile-api";
 
-type UserResponseType = {
-  name: string;
-  id: number;
-  photos: PhotosType;
-  status: null | string;
-  followed: false;
-};
-
 type GetUsersResponseType = {
-  items: Array<UserResponseType>;
+  items: Array<UsersType>;
   totalCount: number;
   error: null | string;
 };

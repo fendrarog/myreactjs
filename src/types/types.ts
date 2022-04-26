@@ -41,4 +41,3 @@ export type UsersType = {
   photos: PhotosType;
   followed: boolean;
 };
-

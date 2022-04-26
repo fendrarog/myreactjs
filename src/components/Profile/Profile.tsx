@@ -20,24 +20,29 @@ const Profile: React.FC<RouteComponentProps<RouteParams>> = (props) => {
     (state: CombinedStateType) => state.auth.userId
   );
   const isAuth = useSelector((state: CombinedStateType) => state.auth.isAuth);
+  const ownerPhoto = useSelector(
+    (state: CombinedStateType) => state.profilePage.ownerPhoto
+  );
 
   const dispatch = useDispatch();
 
   const refreshProfile = useCallback(() => {
-    let userId = Number(props.match.params.userId);
+    let userId: null | number = Number(props.match.params.userId);
     if (!userId) {
       userId = authorizedUserId;
       if (!userId) {
         props.history.push("/login");
       }
     }
-    dispatch(getUserProfile(userId));
-    dispatch(getUserStatus(userId));
+    if (userId) {
+      dispatch(getUserProfile(userId));
+      dispatch(getUserStatus(userId));
+    }
   }, [authorizedUserId, dispatch, props.history, props.match.params.userId]);
 
   useEffect(() => {
     refreshProfile();
-  }, [refreshProfile]);
+  }, [refreshProfile, ownerPhoto]);
 
   if (!isAuth) {
     return <Preloader />;

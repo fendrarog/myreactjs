@@ -1,10 +1,5 @@
 import { CommonThunkType, InferActionsTypes } from "./redux-store";
-import {
-  PostsType,
-  ProfileType,
-  PhotosType,
-  SetOwnersProfilePayloadType,
-} from "./../types/types";
+import { PostsType, ProfileType, PhotosType } from "./../types/types";
 import { usersAPI } from "../api/users-api";
 import { profileAPI } from "../api/profile-api";
 import { ResultCodes } from "../api/api";
@@ -61,7 +56,6 @@ const profileReducer = (
       return {
         ...state,
         ownerPhoto: action.photos,
-        profile: { ...state.profile, photos: action.photos },
       };
 
     case "SET_OWNERS_PROFILE":
@@ -108,7 +102,7 @@ export const actions = {
       type: "SET_USER_STATUS",
       payload: { status },
     } as const),
-  setOwnersProfile: (payload: SetOwnersProfilePayloadType) =>
+  setOwnersProfile: (payload: ProfileType) =>
     ({
       type: "SET_OWNERS_PROFILE",
       payload,
@@ -165,7 +159,7 @@ export const updateUserStatus =
   };
 
 export const updateOwnersProfile =
-  (dataDescription: SetOwnersProfilePayloadType): ThunkType =>
+  (dataDescription: ProfileType): ThunkType =>
   async (dispatch) => {
     const ownersProfileData = await profileAPI.updateOwnersProfileAPI(
       dataDescription

@@ -1,14 +1,15 @@
+import React from "react";
 import Preloader from "../../Common/Preloader/Preloader";
 import s from "./ProfileInfo.module.css";
 import onStatus from "../../../assets/images/on.png";
 import offStatus from "../../../assets/images/off.png";
-import noPhoto from "../../../assets/images/nophoto.jpg";
 import ProfileStatus from "./ProfileStatus";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import ProfileDataForm from "./ProfileDataForm";
 import { CombinedStateType } from "../../../redux/redux-store";
-import { ProfileType } from "../../../types/types";
+import { ContactsType, ProfileType } from "../../../types/types";
+import ProfilePhotoData from "./ProfilePhotoData";
 
 const ProfileInfo: React.FC<{}> = () => {
   const profile = useSelector(
@@ -57,11 +58,7 @@ const ProfileData: React.FC<PropsProfileDataType> = ({
   return (
     <div className={s.descriptionBlock}>
       <div className={s.descriptionItem}>
-        <img
-          src={profile.photos.large ? profile.photos.large : noPhoto}
-          alt="#"
-          className={s.photoProfile}
-        />
+        <ProfilePhotoData photos={profile.photos} isOwner={isOwner} />
       </div>
       <div className={s.descriptionItem}>{profile.fullName.toUpperCase()}</div>
       <div className={s.descriptionItem}>
@@ -89,7 +86,7 @@ const ProfileData: React.FC<PropsProfileDataType> = ({
             <Contact
               key={key}
               contactKey={key}
-              contactValue={profile.contacts[key]}
+              contactValue={profile.contacts[key as keyof ContactsType]}
             />
           );
         })}

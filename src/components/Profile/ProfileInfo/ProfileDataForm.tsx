@@ -1,14 +1,11 @@
+import React from "react";
 import s from "./ProfileInfo.module.css";
-import noPhoto from "../../../assets/images/nophoto.jpg";
 import ProfileStatus from "./ProfileStatus";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import {
-  updateOwnersProfile,
-  updateUserPicture,
-} from "../../../redux/profile-reducer";
-import { ContactsType, ProfileType } from "../../../types/types";
-import { ChangeEvent } from "react";
+import { updateOwnersProfile } from "../../../redux/profile-reducer";
+import { ProfileType } from "../../../types/types";
+import ProfilePhotoData from "./ProfilePhotoData";
 
 type PropsType = {
   profile: ProfileType;
@@ -23,49 +20,21 @@ const ProfileDataForm: React.FC<PropsType> = ({
 }) => {
   const dispatch = useDispatch();
 
-  const { photos, ...restProfile } = profile;
-
-  type LoginData = {
-    userPicture: File;
-    aboutMe: string;
-    userId: number;
-    lookingForAJob: boolean;
-    lookingForAJobDescription: string;
-    fullName: string;
-    contacts: ContactsType;
-  };
-
-  const { register, handleSubmit } = useForm<LoginData>({
-    defaultValues: { ...restProfile },
+  const { register, handleSubmit } = useForm<ProfileType>({
+    defaultValues: { ...profile },
   });
 
-  const onSubmit: SubmitHandler<LoginData> = async (data) => {
-    const { userPicture, ...restProfile } = data;
-    await dispatch(updateOwnersProfile(restProfile));
+  const onSubmit: SubmitHandler<ProfileType> = async (data) => {
+    await dispatch(updateOwnersProfile(data));
     jumpToNonEditMode();
   };
 
   return (
     <div className={s.descriptionBlock}>
       <div className={s.descriptionItem}>
-        <img
-          src={photos.large ? photos.large : noPhoto}
-          alt="#"
-          className={s.photoProfile}
-        />
+        <ProfilePhotoData photos={profile.photos} isOwner={isOwner} />
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className={s.descriptionItem}>
-          <input
-            type="file"
-            {...register("userPicture", {
-              onChange: (e: ChangeEvent<HTMLInputElement>) => {
-                dispatch(updateUserPicture(e.target.files[0]));
-              },
-            })}
-            className={s.customFileInput}
-          />
-        </div>
         <div className={s.descriptionItem}>
           <input {...register("fullName")} placeholder="Full name" />
         </div>
@@ -86,11 +55,16 @@ const ProfileDataForm: React.FC<PropsType> = ({
         </div>
         <div className={s.descriptionItem}>
           <b>Contacts: </b>
-          {Object.keys(profile.contacts).map((key: keyof ContactsType) => {
+          {Object.keys(profile.contacts).map((key) => {
             return (
               <div key={key} className={s.contact}>
                 <b>{key} :</b>
-                <input {...register("contacts." + key)} placeholder={key} />
+                <input
+                  {...register(
+                    `contacts.${key as keyof ContactsInterface & string}` //или `contacts.${key as keyof typeof profile.contacts & string}`
+                  )}
+                  placeholder={key}
+                />
               </div>
             );
           })}
@@ -107,3 +81,14 @@ const ProfileDataForm: React.FC<PropsType> = ({
 };
 
 export default ProfileDataForm;
+
+interface ContactsInterface {
+  github: string;
+  vk: string;
+  facebook: string;
+  instagram: string;
+  twitter: string;
+  website: string;
+  youtube: string;
+  mainLink: string;
+};

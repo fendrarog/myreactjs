@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
@@ -13,6 +13,17 @@ const Login: React.FC = () => {
 
   //const [checked, toggle] = useReducer((checked) => !checked, rememberMe);
   const [checked, setChecked] = useState(rememberMe);
+  const [email, setEmail] = useState("");
+  
+  //--------todo----------------------
+  useEffect(() => {
+    if (!userEmail) {
+      setEmail("");
+    } else {
+      setEmail(userEmail);
+    }
+    debugger;
+  }, [userEmail, rememberMe]);
 
   type LoginData = {
     login: string;
@@ -26,6 +37,7 @@ const Login: React.FC = () => {
     handleSubmit,
   } = useForm<LoginData>({
     mode: "onChange",
+    defaultValues: { login: email },
   });
 
   const onSubmit: SubmitHandler<LoginData> = (data) => {
@@ -50,7 +62,6 @@ const Login: React.FC = () => {
                 message: "Минимум 5 символов.",
               },
             })}
-            defaultValue={userEmail ? userEmail : null}
           />
         </label>
         <div>{errors?.login && <p>{errors.login?.message || "Error!"}</p>}</div>

@@ -1,3 +1,4 @@
+import React from "react";
 import { NavLink } from "react-router-dom";
 import s from "./Header.module.css";
 import noPhoto from "../../assets/images/nophoto.jpg";
@@ -22,7 +23,9 @@ const Header: React.FC = () => {
   useEffect(() => {
     if (!ownerPhoto) {
       const userId = authorizedUserId;
-      dispatch(getLoginPicture(userId));
+      if (userId) {
+        dispatch(getLoginPicture(userId));
+      }
     }
   }, [ownerPhoto, authorizedUserId, dispatch]);
 
